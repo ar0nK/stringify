@@ -1,5 +1,5 @@
 import { Star } from 'lucide-react';
-import './card.css';
+import '../style/Card.css';
 
 const Card = ({ 
   image = null,
