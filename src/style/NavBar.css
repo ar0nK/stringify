@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+a, .nav-link {
+    font-family: 'Libre Bodoni', serif;
+}
+
+.navbar-brand {
+    font-size: 36px;
+    padding-left: 0.5rex;
+}
+
+hr{
+    padding: 0.5rem;
+    color: rgba(0, 0, 0, 0.5);
+}

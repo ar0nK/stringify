@@ -8,6 +8,7 @@ import Product from './pages/Product';
 import SavedProducts from './pages/SavedProducts';
 import Cart from './pages/Cart';
 import LoginRegister from './pages/LoginRegister';
+import Profile from './pages/Profile'
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/saved-products" element={<SavedProducts />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginRegister />} />
+          <Route path="/profile" element={<Profile/>}/>
         </Routes>
       </BrowserRouter>
     </div>
