@@ -16,6 +16,7 @@ export default function store() {
               {guitars.map(guitar => (
                 <div key={guitar.id} className="col-12 col-md-4 d-flex">
                   <Card
+                    id={guitar.id}
                     image={guitar.image}
                     title={guitar.title}
                     rating={guitar.rating}

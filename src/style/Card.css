@@ -83,3 +83,9 @@
   fill: #fbbf24;
   color: #fbbf24;
 }
+
+.product-title a {
+  color: #111827;
+  text-decoration: none;
+  cursor: pointer;
+}

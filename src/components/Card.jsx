@@ -1,7 +1,9 @@
 import { Star } from 'lucide-react';
 import '../style/Card.css';
+import { Link } from 'react-router-dom'
 
 const Card = ({ 
+  id,
   image = null,
   title = "Title",
   rating = 5,
@@ -18,7 +20,7 @@ const Card = ({
       </div>
       
       <div className="product-content">
-        <h3 className="product-title">{title}</h3>
+        <h3 className="product-title"><Link to={`/product/${id}`} className="text-decoration-none">{title}</Link></h3>
         
         <div className="product-rating">
           <Star className="star-icon" />
