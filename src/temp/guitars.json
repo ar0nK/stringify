@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "image": "/images/guitars/stratocaster_black.png",
+    "title": "Classic Stratocaster – Fekete",
+    "rating": 4.8,
+    "maxRating": 5,
+    "description": "Klasszikus Stratocaster forma, kézzel válogatott éger testtel és juhar nyakkal. Sokoldalú hangzás blueshoz, rockhoz és pophoz.",
+    "price": 289999,
+    "currency": "Ft"
+  },
+  {
+    "id": 2,
+    "image": "/images/guitars/telecaster_blonde.png",
+    "title": "Vintage Telecaster – Blonde",
+    "rating": 4.6,
+    "maxRating": 5,
+    "description": "Letisztult Telecaster dizájn, hamu testtel és vintage single-coil pickupokkal. Karakteres twang és tiszta hangzás.",
+    "price": 269999,
+    "currency": "Ft"
+  },
+  {
+    "id": 3,
+    "image": "/images/guitars/lespaul_sunburst.png",
+    "title": "Modern Les Paul – Sunburst",
+    "rating": 4.9,
+    "maxRating": 5,
+    "description": "Mahagóni test és nyak, jávor fedlappal. Erőteljes humbucker pickupok, vastag és meleg hangzás.",
+    "price": 349999,
+    "currency": "Ft"
+  },
+  {
+    "id": 4,
+    "image": "/images/guitars/jazzmaster_white.png",
+    "title": "Jazzmaster – Olympic Fehér",
+    "rating": 4.5,
+    "maxRating": 5,
+    "description": "Alternatív és indie zenéhez ideális offset testforma, egyedi tremoló rendszerrel és gazdag hangszínnel.",
+    "price": 309999,
+    "currency": "Ft"
+  },
+  {
+    "id": 5,
+    "image": "/images/guitars/superstrat_red.png",
+    "title": "Superstrat – Metallic Piros",
+    "rating": 4.7,
+    "maxRating": 5,
+    "description": "Modern superstrat kialakítás, gyors nyakkal és nagy kimenetű pickupokkal. Tökéletes metalhoz és shredhez.",
+    "price": 329999,
+    "currency": "Ft"
+  },
+  {
+    "id": 6,
+    "image": "/images/guitars/sg_cherry.png",
+    "title": "SG Standard – Cherry",
+    "rating": 4.6,
+    "maxRating": 5,
+    "description": "Könnyű test, kiváló felső bund hozzáférés és ikonikus rock hangzás. Klasszikus választás színpadra.",
+    "price": 299999,
+    "currency": "Ft"
+  }
+]
