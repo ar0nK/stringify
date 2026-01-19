@@ -12,9 +12,9 @@ export default function store() {
             <h5>Szűrők</h5>
           </aside>
           <section className="col-12 col-lg-9">
-            <div className="row g-5">
+            <div className="row g-3 g-md-4">
               {guitars.map(guitar => (
-                <div key={guitar.id} className="col-12 col-md-4 d-flex">
+                <div key={guitar.id} className="col-12 col-sm-6 col-md-4 d-flex">
                   <Card
                     id={guitar.id}
                     image={guitar.image}
