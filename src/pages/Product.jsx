@@ -112,7 +112,7 @@ export default function Product() {
             <h5 className={product.isAvailable ? "text-success" : "text-danger"}>
               {product.isAvailable ? "Jelenleg raktáron" : "Nincs raktáron"}
             </h5>
-            <button className='btn btn-danger btn-lg w-100 mt-4 rounded shadow-sm'>
+            <button className='btn btn-danger btn-lg w-100 mt-4 rounded'>
               Kosárba
             </button>
           </div>
