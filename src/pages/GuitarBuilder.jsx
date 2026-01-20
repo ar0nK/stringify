@@ -2,9 +2,15 @@ import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import GuitarBuilderForm from '../components/GuitarForm'
 import '../style/GuitarBuilder.css'
+import StratocasterSVG from '../components/guitar-builder/controls/svg/StratocasterSVG'
 
 export default function GuitarBuilder() {
   const [view, setView] = useState('front')
+  const [bodyColor, setBodyColor] = useState('#000000')
+  const [pickguard, setPickguard] = useState(true)
+  const [neckPickup, setNeckPickup] = useState('single-coil')
+  const [middlePickup, setMiddlePickup] = useState('single-coil')
+  const [bridgePickup, setBridgePickup] = useState('single-coil')
 
   const ViewButton = ({ label, value }) => (
     <button
@@ -25,7 +31,18 @@ export default function GuitarBuilder() {
         <div className="row gx-4">
 
           <div className="col-12 col-md-4 col-lg-3 d-flex">
-            <GuitarBuilderForm />
+            <GuitarBuilderForm 
+              bodyColor={bodyColor}
+              setBodyColor={setBodyColor}
+              pickguard={pickguard}
+              setPickguard={setPickguard}
+              neckPickup={neckPickup}
+              setNeckPickup={setNeckPickup}
+              middlePickup={middlePickup}
+              setMiddlePickup={setMiddlePickup}
+              bridgePickup={bridgePickup}
+              setBridgePickup={setBridgePickup}
+            />
             <div className="vr ms-3 d-none d-md-block" />
           </div>
 
