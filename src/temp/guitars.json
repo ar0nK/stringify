@@ -1,62 +1,218 @@
 [
   {
     "id": 1,
-    "image": "/images/guitars/stratocaster_black.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "Classic Stratocaster – Fekete",
     "rating": 4.8,
-    "maxRating": 5,
-    "description": "Klasszikus Stratocaster forma, kézzel válogatott éger testtel és juhar nyakkal. Sokoldalú hangzás blueshoz, rockhoz és pophoz.",
-    "price": 289999,
-    "currency": "Ft"
+    "reviewCount": 127,
+    "isAvailable": true,
+    "previewDescription": "Klasszikus Stratocaster forma, kézzel válogatott éger testtel és juhar nyakkal. Sokoldalú hangzás blueshoz, rockhoz és pophoz.",
+    "shortDescription": [
+      "Kézzel válogatott éger test",
+      "Juhar nyak és fogólap",
+      "3x single-coil pickup",
+      "5-utas pickup váltó",
+      "Vintage tremolo híd"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
+    "price": 289999
   },
   {
     "id": 2,
-    "image": "/images/guitars/telecaster_blonde.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "Vintage Telecaster – Blonde",
     "rating": 4.6,
-    "maxRating": 5,
-    "description": "Letisztult Telecaster dizájn, hamu testtel és vintage single-coil pickupokkal. Karakteres twang és tiszta hangzás.",
-    "price": 269999,
-    "currency": "Ft"
+    "reviewCount": 89,
+    "isAvailable": true,
+    "previewDescription": "Letisztult Telecaster dizájn, hamu testtel és vintage single-coil pickupokkal. Karakteres twang és tiszta hangzás.",
+    "shortDescription": [
+      "Hamu test construction",
+      "Vintage single-coil pickupok",
+      "3-saddle brass híd",
+      "Karakteres twang hangzás",
+      "Klasszikus blonde finish"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer eget aliquet nibh praesent tristique magna sit amet purus. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Consectetur libero id faucibus nisl tincidunt eget nullam non nisi. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Tincidunt dui ut ornare lectus sit amet est placerat in.",
+    "price": 269999
   },
   {
     "id": 3,
-    "image": "/images/guitars/lespaul_sunburst.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "Modern Les Paul – Sunburst",
     "rating": 4.9,
-    "maxRating": 5,
-    "description": "Mahagóni test és nyak, jávor fedlappal. Erőteljes humbucker pickupok, vastag és meleg hangzás.",
-    "price": 349999,
-    "currency": "Ft"
+    "reviewCount": 203,
+    "isAvailable": false,
+    "previewDescription": "Mahagóni test és nyak, jávor fedlappal. Erőteljes humbucker pickupok, vastag és meleg hangzás.",
+    "shortDescription": [
+      "Mahagóni test és nyak",
+      "Jávor fedlap AAA minőség",
+      "2x Humbucker pickup",
+      "Tune-O-Matic híd",
+      "Vastag, meleg hangzás"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. In iaculis nunc sed augue lacus viverra vitae congue eu. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in. Ac turpis egestas sed tempus urna et pharetra pharetra massa. Elementum nibh tellus molestie nunc non blandit massa enim nec. Facilisis leo vel fringilla est ullamcorper eget nulla facilisi etiam. Amet nisl purus in mollis nunc sed id semper risus.",
+    "price": 349999
   },
   {
     "id": 4,
-    "image": "/images/guitars/jazzmaster_white.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "Jazzmaster – Olympic Fehér",
     "rating": 4.5,
-    "maxRating": 5,
-    "description": "Alternatív és indie zenéhez ideális offset testforma, egyedi tremoló rendszerrel és gazdag hangszínnel.",
-    "price": 309999,
-    "currency": "Ft"
+    "reviewCount": 64,
+    "isAvailable": true,
+    "previewDescription": "Alternatív és indie zenéhez ideális offset testforma, egyedi tremoló rendszerrel és gazdag hangszínnel.",
+    "shortDescription": [
+      "Offset body design",
+      "Egyedi tremolo rendszer",
+      "Rhythm/Lead kapcsoló",
+      "Gazdag, meleg hangszín",
+      "Alternatív és indie stílus"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar pellentesque habitant morbi tristique senectus et netus et malesuada. Eget gravida cum sociis natoque penatibus et magnis dis parturient. Molestie nunc non blandit massa enim nec dui nunc mattis. Condimentum mattis pellentesque id nibh tortor id aliquet lectus proin. Sit amet purus gravida quis blandit turpis cursus in hac. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum. Consectetur purus ut faucibus pulvinar elementum integer enim neque volutpat. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus.",
+    "price": 309999
   },
   {
     "id": 5,
-    "image": "/images/guitars/superstrat_red.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "Superstrat – Metallic Piros",
     "rating": 4.7,
-    "maxRating": 5,
-    "description": "Modern superstrat kialakítás, gyors nyakkal és nagy kimenetű pickupokkal. Tökéletes metalhoz és shredhez.",
-    "price": 329999,
-    "currency": "Ft"
+    "reviewCount": 156,
+    "isAvailable": true,
+    "previewDescription": "Modern superstrat kialakítás, gyors nyakkal és nagy kimenetű pickupokkal. Tökéletes metalhoz és shredhez.",
+    "shortDescription": [
+      "Gyors, vékony nyak profil",
+      "Nagy kimenetű pickupok",
+      "Floyd Rose tremolo",
+      "24 jumbo bund",
+      "Tökéletes metalhoz"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Massa tempor nec feugiat nisl pretium fusce id velit ut. Commodo odio aenean sed adipiscing diam donec adipiscing tristique risus. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna neque. Egestas purus viverra accumsan in nisl nisi scelerisque eu ultrices. Pharetra vel turpis nunc eget lorem dolor sed viverra ipsum. Malesuada pellentesque elit eget gravida cum sociis natoque penatibus et. Turpis egestas maecenas pharetra convallis posuere morbi leo urna molestie.",
+    "price": 329999
   },
   {
     "id": 6,
-    "image": "/images/guitars/sg_cherry.png",
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
     "title": "SG Standard – Cherry",
     "rating": 4.6,
-    "maxRating": 5,
-    "description": "Könnyű test, kiváló felső bund hozzáférés és ikonikus rock hangzás. Klasszikus választás színpadra.",
-    "price": 299999,
-    "currency": "Ft"
+    "reviewCount": 98,
+    "isAvailable": false,
+    "previewDescription": "Könnyű test, kiváló felső bund hozzáférés és ikonikus rock hangzás. Klasszikus választás színpadra.",
+    "shortDescription": [
+      "Könnyű mahagóni test",
+      "Slim taper nyak profil",
+      "Kiváló felső bund hozzáférés",
+      "2x Humbucker pickup",
+      "Ikonikus rock hangzás"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Neque convallis a cras semper auctor neque vitae tempus quam. Diam quam nulla porttitor massa id neque aliquam vestibulum morbi. Eu consequat ac felis donec et odio pellentesque diam volutpat. Ornare lectus sit amet est placerat in egestas erat imperdiet. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Eget mauris pharetra et ultrices neque ornare aenean euismod elementum. Ut etiam sit amet nisl purus in mollis nunc sed. Viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat.",
+    "price": 299999
+  },
+  {
+    "id": 7,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Explorer – Metallic Kék",
+    "rating": 4.4,
+    "reviewCount": 73,
+    "isAvailable": true,
+    "previewDescription": "Futurisztikus testforma mahagóni konstrukcióval. Agresszív megjelenés és erőteljes rock hangzás.",
+    "shortDescription": [
+      "Mahagóni test és nyak",
+      "Explorer forma design",
+      "2x High-output humbucker",
+      "Stopbar tailpiece",
+      "Kiváló sustain"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Bibendum est ultricies integer quis auctor elit sed vulputate mi. Faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. Tempus urna et pharetra pharetra massa massa ultricies mi quis. Vitae sapien pellentesque habitant morbi tristique senectus. Mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien et. Ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula ipsum.",
+    "price": 319999
+  },
+  {
+    "id": 8,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Precision Bass – Sunburst",
+    "rating": 4.7,
+    "reviewCount": 142,
+    "isAvailable": true,
+    "previewDescription": "Legendás basszusgitár split-coil pickuppal. Mély, artikulált hangzás minden stílushoz.",
+    "shortDescription": [
+      "Éger test konstrukció",
+      "Split-coil P-bass pickup",
+      "Juhar C-profil nyak",
+      "20 medium-jumbo bund",
+      "Vintage bridge és hardware"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consectetur libero id faucibus nisl tincidunt eget. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur. Scelerisque varius morbi enim nunc faucibus a pellentesque sit amet. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Odio euismod lacinia at quis risus sed vulputate odio ut. Fames ac turpis egestas sed tempus urna et pharetra. Cursus in hac habitasse platea dictumst quisque sagittis purus sit.",
+    "price": 279999
+  },
+  {
+    "id": 9,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Flying V – Fekete Matt",
+    "rating": 4.3,
+    "reviewCount": 56,
+    "isAvailable": true,
+    "previewDescription": "Ikonikus V-alakú test dizájn. Egyedi megjelenés és éles, metsző rock hangzás.",
+    "shortDescription": [
+      "Mahagóni V-alakú test",
+      "Set-neck konstrukció",
+      "2x Ceramic humbucker",
+      "String-through body",
+      "Matt fekete finish"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Pharetra magna ac placerat vestibulum lectus mauris ultrices eros in. Nulla facilisi morbi tempus iaculis urna id volutpat lacus. Ornare suspendisse sed nisi lacus sed viverra tellus. Amet mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan. Viverra maecenas accumsan lacus vel facilisis volutpat est velit egestas.",
+    "price": 334999
+  },
+  {
+    "id": 10,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Acoustic Dreadnought – Natúr",
+    "rating": 4.8,
+    "reviewCount": 187,
+    "isAvailable": true,
+    "previewDescription": "Klasszikus western gitár masszív lucfenyő tetőlappal. Gazdag, meleg akusztikus hangzás.",
+    "shortDescription": [
+      "Masszív lucfenyő fedlap",
+      "Mahagóni hát és oldalak",
+      "Dreadnought forma",
+      "Palisander fogólap",
+      "Előerősítő és tuner"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Imperdiet proin fermentum leo vel orci porta non pulvinar neque. Semper viverra nam libero justo laoreet sit amet cursus. Quis auctor elit sed vulputate mi sit amet mauris commodo. Malesuada fames ac turpis egestas integer eget aliquet nibh. Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget egestas. Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum.",
+    "price": 189999
+  },
+  {
+    "id": 11,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Jazz Bass – Ocean Blue",
+    "rating": 4.5,
+    "reviewCount": 118,
+    "isAvailable": false,
+    "previewDescription": "Sokoldalú J-bass két single-coil pickuppal. Bright, funkás és modern basszushang.",
+    "shortDescription": [
+      "Éger test anyag",
+      "2x Single-coil J-pickup",
+      "Slim profil nyak",
+      "Active/Passive kapcsoló",
+      "Metallic ocean blue"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sagittis id consectetur purus ut faucibus pulvinar elementum integer enim. Pulvinar neque laoreet suspendisse interdum consectetur libero id. Odio pellentesque diam volutpat commodo sed egestas egestas. Duis convallis convallis tellus id interdum velit laoreet id donec. Nisl pretium fusce id velit ut tortor pretium viverra suspendisse. Euismod nisi porta lorem mollis aliquam ut porttitor leo.",
+    "price": 294999
+  },
+  {
+    "id": 12,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "ES-335 Style – Wine Red",
+    "rating": 4.9,
+    "reviewCount": 165,
+    "isAvailable": true,
+    "previewDescription": "Semi-hollow body gitár jazz és blues stílushoz. Meleg, rezonáns hangzás kiváló sustain-nel.",
+    "shortDescription": [
+      "Semi-hollow konstrukció",
+      "Jávor laminált test",
+      "2x Alnico humbucker",
+      "Coil-split funkció",
+      "Vintage-style hardware"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci ac auctor augue. Eget felis eget nunc lobortis mattis aliquam faucibus purus in. Tristique sollicitudin nibh sit amet commodo nulla facilisi. Magna etiam tempor orci eu lobortis elementum nibh tellus molestie. Tellus in metus vulputate eu scelerisque felis imperdiet proin fermentum. Venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam.",
+    "price": 399999
   }
 ]

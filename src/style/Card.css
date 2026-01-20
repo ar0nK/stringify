@@ -61,7 +61,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   text-align: left;
 }
@@ -121,7 +120,6 @@
   .product-description {
     font-size: 12px;
     margin-bottom: 12px;
-    -webkit-line-clamp: 2;
   }
   
   .product-price {

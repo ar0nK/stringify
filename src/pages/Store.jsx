@@ -20,10 +20,12 @@ export default function store() {
                     image={guitar.image}
                     title={guitar.title}
                     rating={guitar.rating}
-                    maxRating={guitar.maxRating}
-                    description={guitar.description}
+                    reviewCount={guitar.reviewCount}
+                    shortDescription={guitar.shortDescription}
+                    longDescription={guitar.longDescription}
+                    previewDescription={guitar.previewDescription}
+                    isAvailable={guitar.isAvailable}
                     price={guitar.price}
-                    currency={guitar.currency}
                     onAddToCart={() =>
                       console.log(`${guitar.title} added to cart`)
                     }
