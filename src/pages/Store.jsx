@@ -2,10 +2,10 @@ import Card from '../components/Card.jsx'
 import NavBar from '../components/NavBar.jsx'
 import guitars from '../temp/guitars.json'
 
-export default function store() {
+export default function Store() {
   return (
     <div>
-    <NavBar/>
+      <NavBar/>
       <div className="container mt-4">
         <div className="row">
           <aside className="col-12 col-lg-3 mb-4">
@@ -17,7 +17,7 @@ export default function store() {
                 <div key={guitar.id} className="col-12 col-sm-6 col-md-4 d-flex">
                   <Card
                     id={guitar.id}
-                    image={guitar.image}
+                    images={guitar.images || [guitar.image]} 
                     title={guitar.title}
                     rating={guitar.rating}
                     reviewCount={guitar.reviewCount}
