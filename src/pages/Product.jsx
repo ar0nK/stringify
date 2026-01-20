@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom'
 import guitars from '../temp/guitars.json'
 import NavBar from '../components/NavBar'
 import Card from '../components/Card'
-import { Star, ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
+import '../style/Product.css'
 
 export default function Product() {
   const { id } = useParams()
@@ -28,11 +29,11 @@ export default function Product() {
   }
 
   const handleLightboxMouseMove = (e) => {
-    if (!isZoomed) return;
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setZoomPos({ x, y });
+    if (!isZoomed) return
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - left) / width) * 100
+    const y = ((e.clientY - top) / height) * 100
+    setZoomPos({ x, y })
   }
 
   const thumbnails = product.images || Array(5).fill(product.image)
@@ -48,17 +49,7 @@ export default function Product() {
                 key={index}
                 src={img}
                 alt=""
-                className="img-fluid border rounded"
-                style={{
-                  cursor: 'pointer',
-                  width: '80px',
-                  height: '80px',
-                  minWidth: '80px',
-                  aspectRatio: '1/1',
-                  objectFit: 'cover',
-                  opacity: activeImage === img ? 1 : 0.6,
-                  border: activeImage === img ? '2px solid #dc3545' : '1px solid #dee2e6'
-                }}
+                className={`img-fluid border rounded thumbnail-image ${activeImage === img ? 'active' : 'inactive'}`}
                 onClick={() => setActiveImage(img)}
               />
             ))}
@@ -66,27 +57,24 @@ export default function Product() {
 
           <div className='col-md-6 order-1 order-md-2 position-relative'>
             <div
-              className="border rounded overflow-hidden position-relative"
-              style={{ cursor: 'zoom-in', aspectRatio: '1/1', backgroundColor: '#fff' }}
+              className="border rounded overflow-hidden position-relative product-image-container"
               onClick={() => setShowLightbox(true)}
             >
               <img
-                className='img-fluid w-100 h-100'
+                className='img-fluid w-100 h-100 product-image'
                 src={activeImage}
                 alt={product.title}
-                style={{ objectFit: 'contain' }}
               />
-              <div className="position-absolute bottom-0 end-0 m-2 bg-white rounded-circle p-1 opacity-75">
+              <div className="position-absolute bottom-0 end-0 m-2 p-1">
                 <ZoomIn size={20} />
               </div>
             </div>
 
             <button
-              className="btn position-absolute top-0 end-0 m-3"
-              style={{ zIndex: 10 }}
+              className="btn position-absolute top-0 end-0 m-3 save-button"
               onClick={handleSave}
             >
-              <i className="bi bi-heart" style={{ fontSize: '1.5rem' }}></i>
+              <i className="bi bi-heart"></i>
             </button>
           </div>
 
@@ -154,10 +142,10 @@ export default function Product() {
                 </div>
               ))}
             </div>
-            <button className="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev" style={{ left: '-100px' }}>
+            <button className="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev">
               <ChevronLeft size={40} className="text-dark" />
             </button>
-            <button className="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next" style={{ right: '-100px' }}>
+            <button className="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next">
               <ChevronRight size={40} className="text-dark" />
             </button>
           </div>
@@ -165,7 +153,7 @@ export default function Product() {
         <div className='container d-md-none overflow-auto'>
           <div className="d-flex gap-3 pb-3">
             {relatedProducts.slice(0, 6).map((guitar) => (
-              <div key={guitar.id} style={{ minWidth: '280px' }}>
+              <div key={guitar.id} className="mobile-product-card">
                 <Card {...guitar} />
               </div>
             ))}
@@ -175,26 +163,20 @@ export default function Product() {
 
       {showLightbox && (
         <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.95)' }}
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center lightbox-overlay"
           onClick={() => setShowLightbox(false)}
         >
           <button
-            className="position-absolute top-0 end-0 m-4 btn text-white border-0"
+            className="position-absolute top-0 end-0 m-4 btn text-white lightbox-close-button"
             onClick={() => setShowLightbox(false)}
           >
             <X size={40} />
           </button>
           <div
-            className="position-relative overflow-hidden"
-            style={{
-              width: '90vw',
-              height: '90vh',
-              cursor: isZoomed ? 'zoom-out' : 'zoom-in'
-            }}
+            className={`position-relative lightbox-image-container ${isZoomed ? 'zoom-out' : 'zoom-in'}`}
             onClick={(e) => {
-              e.stopPropagation();
-              setIsZoomed(!isZoomed);
+              e.stopPropagation()
+              setIsZoomed(!isZoomed)
             }}
             onMouseMove={handleLightboxMouseMove}
           >
@@ -214,14 +196,14 @@ export default function Product() {
       )}
 
       {showModal && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }} onClick={() => setShowModal(false)}>
+        <div className="modal show d-block modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h5 className="modal-title">Részletes leírás - {product.title}</h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
-              <div className="modal-body" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+              <div className="modal-body modal-body-scrollable">
                 {product.longDescription}
               </div>
               <div className="modal-footer">
