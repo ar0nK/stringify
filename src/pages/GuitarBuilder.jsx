@@ -10,9 +10,8 @@ export default function GuitarBuilder() {
     <button
       type="button"
       onClick={() => setView(value)}
-      className={`btn btn-sm rounded-pill me-2 ${
-        view === value ? 'btn-danger' : 'btn-light'
-      }`}
+      className={`btn btn-sm rounded-pill me-2 ${view === value ? 'btn-danger' : 'btn-light'
+        }`}
     >
       {label}
     </button>
@@ -38,8 +37,22 @@ export default function GuitarBuilder() {
                 <ViewButton label="Hátsó nézet" value="back" />
               </div>
 
-              <div className="h-100 d-flex align-items-center justify-content-center text-muted">
-                {view === 'front' ? 'Előli nézet' : 'Hátsó nézet'}
+              <div className="h-100 d-flex align-items-center justify-content-center">
+                {view === 'front' && (
+                  <StratocasterSVG
+                    bodyColor={bodyColor}
+                    showPickguard={pickguard}
+                    neckPickup={neckPickup}
+                    middlePickup={middlePickup}
+                    bridgePickup={bridgePickup}
+                  />
+                )}
+
+                {view === 'back' && (
+                  <div className="text-muted">
+                    Hátsó nézet (később SVG)
+                  </div>
+                )}
               </div>
             </div>
           </div>
