@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "images": [
+      "https://i.redd.it/b00xjp71bi0e1.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFw_Hoxbodoh8Zix74H0ux6inNdTSccxCJKg&s",
+      "https://pbs.twimg.com/media/Goe6W2KWsAAb7uU.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oATnH0wrPEN_b0AsWP2TZoVl78jLRr4AKw&s",
+      "https://cdn.mos.cms.futurecdn.net/Q3SKfrDg6Wk57nEzGPMrpa.png"
+    ],
+    "title": "Classic Stratocaster – Fekete",
+    "rating": 4.8,
+    "reviewCount": 127,
+    "isAvailable": true,
+    "previewDescription": "Klasszikus Stratocaster forma, kézzel válogatott éger testtel és juhar nyakkal. Sokoldalú hangzás blueshoz, rockhoz és pophoz.",
+    "shortDescription": [
+      "Kézzel válogatott éger test",
+      "Juhar nyak és fogólap",
+      "3x single-coil pickup",
+      "5-utas pickup váltó",
+      "Vintage tremolo híd"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
+    "price": 289999
+  },
+  {
+    "id": 5,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "images": [
+      "https://i.redd.it/b00xjp71bi0e1.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFw_Hoxbodoh8Zix74H0ux6inNdTSccxCJKg&s",
+      "https://pbs.twimg.com/media/Goe6W2KWsAAb7uU.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oATnH0wrPEN_b0AsWP2TZoVl78jLRr4AKw&s",
+      "https://cdn.mos.cms.futurecdn.net/Q3SKfrDg6Wk57nEzGPMrpa.png"
+    ],
+    "title": "Superstrat – Metallic Piros",
+    "rating": 4.7,
+    "reviewCount": 156,
+    "isAvailable": true,
+    "previewDescription": "Modern superstrat kialakítás, gyors nyakkal és nagy kimenetű pickupokkal. Tökéletes metalhoz és shredhez.",
+    "shortDescription": [
+      "Gyors, vékony nyak profil",
+      "Nagy kimenetű pickupok",
+      "Floyd Rose tremolo",
+      "24 jumbo bund",
+      "Tökéletes metalhoz"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Massa tempor nec feugiat nisl pretium fusce id velit ut. Commodo odio aenean sed adipiscing diam donec adipiscing tristique risus. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna neque. Egestas purus viverra accumsan in nisl nisi scelerisque eu ultrices. Pharetra vel turpis nunc eget lorem dolor sed viverra ipsum. Malesuada pellentesque elit eget gravida cum sociis natoque penatibus et. Turpis egestas maecenas pharetra convallis posuere morbi leo urna molestie.",
+    "price": 329999
+  },
+  {
+    "id": 10,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "images": [
+      "https://i.redd.it/b00xjp71bi0e1.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFw_Hoxbodoh8Zix74H0ux6inNdTSccxCJKg&s",
+      "https://pbs.twimg.com/media/Goe6W2KWsAAb7uU.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oATnH0wrPEN_b0AsWP2TZoVl78jLRr4AKw&s",
+      "https://cdn.mos.cms.futurecdn.net/Q3SKfrDg6Wk57nEzGPMrpa.png"
+    ],
+    "title": "Acoustic Dreadnought – Natúr",
+    "rating": 4.8,
+    "reviewCount": 187,
+    "isAvailable": true,
+    "previewDescription": "Klasszikus western gitár masszív lucfenyő tetőlappal. Gazdag, meleg akusztikus hangzás.",
+    "shortDescription": [
+      "Masszív lucfenyő fedlap",
+      "Mahagóni hát és oldalak",
+      "Dreadnought forma",
+      "Palisander fogólap",
+      "Előerősítő és tuner"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Imperdiet proin fermentum leo vel orci porta non pulvinar neque. Semper viverra nam libero justo laoreet sit amet cursus. Quis auctor elit sed vulputate mi sit amet mauris commodo. Malesuada fames ac turpis egestas integer eget aliquet nibh. Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget egestas. Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum.",
+    "price": 189999
+  },
+  {
+    "id": 12,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "images": [
+      "https://i.redd.it/b00xjp71bi0e1.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFw_Hoxbodoh8Zix74H0ux6inNdTSccxCJKg&s",
+      "https://pbs.twimg.com/media/Goe6W2KWsAAb7uU.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oATnH0wrPEN_b0AsWP2TZoVl78jLRr4AKw&s",
+      "https://cdn.mos.cms.futurecdn.net/Q3SKfrDg6Wk57nEzGPMrpa.png"
+    ],
+    "title": "ES-335 Style – Wine Red",
+    "rating": 4.9,
+    "reviewCount": 165,
+    "isAvailable": true,
+    "previewDescription": "Semi-hollow body gitár jazz és blues stílushoz. Meleg, rezonáns hangzás kiváló sustain-nel.",
+    "shortDescription": [
+      "Semi-hollow konstrukció",
+      "Jávor laminált test",
+      "2x Alnico humbucker",
+      "Coil-split funkció",
+      "Vintage-style hardware"
+    ],
+    "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hendrerit gravida rutrum quisque non tellus orci ac auctor augue. Eget felis eget nunc lobortis mattis aliquam faucibus purus in. Tristique sollicitudin nibh sit amet commodo nulla facilisi. Magna etiam tempor orci eu lobortis elementum nibh tellus molestie. Tellus in metus vulputate eu scelerisque felis imperdiet proin fermentum. Venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam.",
+    "price": 399999
+  }
+]
