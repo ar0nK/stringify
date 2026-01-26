@@ -66,11 +66,12 @@ export default function Cart() {
             </div>
           </div>
           
-          <div className="col-lg-4">
-            <h2 className="text-center mb-3">Összefoglalás</h2>
+          <div className="col-lg-4 text-start">
+            <h2 className="mb-3">Összefoglalás</h2>
             <hr />
             <p>Termékek: {cartItems.length}</p>
             <h4>Teljes ár: {formatPrice(calculateTotal())} Ft</h4>
+            <br />
             <button className="btn btn-danger w-100">Fizetés</button>
           </div>
         </div>

@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from "react-router";
 
 export default function NavBar() {
 
   const location = useLocation();
   const isGuitarBuilder = location.pathname === "/guitar-builder";
+
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   return (
     <div>
@@ -19,7 +26,7 @@ export default function NavBar() {
             <div className="d-flex justify-content-center flex-grow-1 my-2 my-lg-0">
               <form className="d-flex position-relative" role="search" style={{ maxWidth: '600px', width: '100%' }}>
                 <i className="bi bi-search position-absolute" style={{ left: '15px', top: '50%', transform: 'translateY(-50%)', zIndex: 10, color: '#6c757d' }}></i>
-                <input className="bg-light form-control ps-5 rounded-pill" type="search" placeholder="Search" aria-label="Search"/>
+                <input className={`form-control ps-5 rounded-pill ${ theme === "dark" && location.pathname !== "/" ? "bg-dark text-light border-secondary" : "bg-light" }`} type="search" placeholder="Search" aria-label="Search"/>
               </form>
             </div>
             )}
@@ -27,9 +34,13 @@ export default function NavBar() {
               <div className="d-flex flex-row gap-5 me-lg-4">
                 <Link className="nav-link" to="/saved-products"><i className="bi bi-heart" style={{ fontSize: '1.5rem' }}></i></Link>
                 <Link className="nav-link" to="/cart"><i className="bi bi-cart" style={{ fontSize: '1.5rem' }}></i></Link>
-                <Link className="nav-link" to="/settings"><i className="bi bi-gear" style={{ fontSize: '1.5rem' }}></i></Link>
+                <button className="nav-link btn p-0 border-0 bg-transparent" onClick={() => setTheme(theme === "light" ? "dark" : "light")} >
+                  <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
+                </button>
               </div>
-              <Link className="nav-link" to="/profile"><i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i></Link>
+              <Link className="nav-link" to="/profile">
+                <i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i>
+              </Link>
             </div>
           </div>
         </div>

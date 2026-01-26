@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import GuitarBuilderForm from '../components/GuitarForm'
 import '../style/GuitarBuilder.css'
@@ -11,13 +11,17 @@ export default function GuitarBuilder() {
   const [neckPickup, setNeckPickup] = useState('single-coil')
   const [middlePickup, setMiddlePickup] = useState('single-coil')
   const [bridgePickup, setBridgePickup] = useState('single-coil')
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light")
+
+  useEffect(() => {
+    setTheme(localStorage.getItem("theme") || "light")
+  }, [])
 
   const ViewButton = ({ label, value }) => (
     <button
       type="button"
       onClick={() => setView(value)}
-      className={`btn btn-sm rounded-pill me-2 ${view === value ? 'btn-danger' : 'btn-light'
-        }`}
+      className={`btn btn-sm rounded-pill me-2 ${view === value ? 'btn-danger' : theme === "dark" ? 'btn-outline-light' : 'btn-light'}`}
     >
       {label}
     </button>
@@ -42,12 +46,13 @@ export default function GuitarBuilder() {
               setMiddlePickup={setMiddlePickup}
               bridgePickup={bridgePickup}
               setBridgePickup={setBridgePickup}
+              theme={theme}
             />
-            <div className="vr ms-3 d-none d-md-block" />
+            <div className={`vr ms-3 d-none d-md-block ${theme === "dark" ? "opacity-50" : ""}`} />
           </div>
 
           <div className="col-12 col-md-8 col-lg-6 d-flex justify-content-center my-4 my-lg-0">
-            <div className="builder-preview position-relative w-100">
+            <div className={`builder-preview position-relative w-100 ${theme === "dark" ? "bg-dark border-secondary" : ""}`}>
 
               <div className="view-toggle">
                 <ViewButton label="Előli nézet" value="front" />
@@ -66,7 +71,7 @@ export default function GuitarBuilder() {
                 )}
 
                 {view === 'back' && (
-                  <div className="text-muted">
+                  <div className={theme === "dark" ? "text-secondary" : "text-muted"}>
                     Hátsó nézet (később SVG)
                   </div>
                 )}
@@ -75,9 +80,9 @@ export default function GuitarBuilder() {
           </div>
 
           <div className="col-12 col-lg-3 text-center d-flex flex-column justify-content-center">
-            <h2 className="fw-bold">Teljes ár:</h2>
+            <h2 className={`fw-bold ${theme === "dark" ? "text-light" : ""}`}>Teljes ár:</h2>
 
-            <div className="fw-normal mx-auto builder-price">
+            <div className={`fw-normal mx-auto builder-price ${theme === "dark" ? "text-light" : ""}`}>
               999,999 Ft
             </div>
 
