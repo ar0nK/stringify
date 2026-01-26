@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "productId": 1,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Classic Stratocaster – Fekete",
+    "price": 289999,
+    "quantity": 1,
+    "isAvailable": true
+  },
+  {
+    "id": 2,
+    "productId": 5,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Superstrat – Metallic Piros",
+    "price": 329999,
+    "quantity": 2,
+    "isAvailable": true
+  },
+  {
+    "id": 3,
+    "productId": 8,
+    "image": "https://i.redd.it/b00xjp71bi0e1.png",
+    "title": "Precision Bass – Sunburst",
+    "price": 279999,
+    "quantity": 1,
+    "isAvailable": true
+  }
+]
