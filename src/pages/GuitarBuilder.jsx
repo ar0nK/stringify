@@ -48,11 +48,11 @@ export default function GuitarBuilder() {
               setBridgePickup={setBridgePickup}
               theme={theme}
             />
-            <div className={`vr ms-3 d-none d-md-block ${theme === "dark" ? "opacity-50" : ""}`} />
+            <div className={`vr ms-3 d-none d-md-block ${theme === "dark" ? "opacity-50" : "opacity-0"}`} />
           </div>
 
           <div className="col-12 col-md-8 col-lg-6 d-flex justify-content-center my-4 my-lg-0">
-            <div className={`builder-preview position-relative w-100 ${theme === "dark" ? "bg-dark border-secondary" : ""}`}>
+            <div className={`builder-preview position-relative w-100 ${theme === "dark" ? "bg-dark border-secondary" : "border-secondary"}`}>
 
               <div className="view-toggle">
                 <ViewButton label="Előli nézet" value="front" />
@@ -80,9 +80,9 @@ export default function GuitarBuilder() {
           </div>
 
           <div className="col-12 col-lg-3 text-center d-flex flex-column justify-content-center">
-            <h2 className={`fw-bold ${theme === "dark" ? "text-light" : ""}`}>Teljes ár:</h2>
+            <h2 className={`fw-bold ${theme === "dark" ? "text-light" : "text-dark"}`}>Teljes ár:</h2>
 
-            <div className={`fw-normal mx-auto builder-price ${theme === "dark" ? "text-light" : ""}`}>
+            <div className={`fw-normal mx-auto builder-price ${theme === "dark" ? "text-light" : "text-dark"}`}>
               999,999 Ft
             </div>
 
