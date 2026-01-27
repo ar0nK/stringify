@@ -14,8 +14,8 @@ export default function NavBar() {
   }, [theme]);
 
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg">
+    <div className="position-fixed top-0 start-0 end-0" style={{ zIndex: 1030 }}>
+      <nav className="navbar navbar-expand-lg bg-body">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">Stringify</a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
