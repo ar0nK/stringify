@@ -1,0 +1,56 @@
+.login-register-container {
+  background-color: #f8f9fa;
+}
+
+.login-register-card {
+  width: 420px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.login-register-heading {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  color: #2c3e50;
+  font-size: 32px;
+}
+
+.login-register-label {
+  color: #5a6c7d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.login-register-input {
+  background-color: #f0f2f5;
+  font-size: 15px;
+  transition: all 0.2s;
+  border: 1px solid #e0e3e7 !important;
+}
+
+.login-register-input:focus {
+  background-color: #ffffff;
+  border-color: #2c3e50 !important;
+  box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.15) !important;
+}
+
+.login-register-button {
+  background-color: #2c3e50;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  transition: all 0.2s;
+}
+
+.login-register-button:hover {
+  background-color: #34495e;
+}
+
+.login-register-toggle {
+  color: #4a90e2;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.login-register-toggle:hover {
+  color: #357abd;
+}
