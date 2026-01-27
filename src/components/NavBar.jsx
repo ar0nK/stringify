@@ -14,6 +14,7 @@ export default function NavBar() {
   }, [theme]);
 
   return (
+    <>
     <div className="position-fixed top-0 start-0 end-0" style={{ zIndex: 1030 }}>
       <nav className="navbar navbar-expand-lg bg-body">
         <div className="container-fluid">
@@ -47,5 +48,7 @@ export default function NavBar() {
       </nav>
       <hr className="mt-0"/>
     </div>
+    <div style={{ height: '80px' }}/>
+  </>
   )
 }
