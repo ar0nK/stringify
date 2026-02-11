@@ -27,7 +27,7 @@ export default function Product() {
         setError(null)
         
         // Fetch the specific product
-        const response = await fetch(`${apiBase}/api/products/${id}`)
+        const response = await fetch(`${apiBase}/api/product_info/${id}`)
         if (!response.ok) {
           throw new Error('Product not found')
         }
@@ -36,7 +36,7 @@ export default function Product() {
         setActiveImage(data.images?.[0] || '')
         
         // Fetch all products for related products
-        const allResponse = await fetch(`${apiBase}/api/products`)
+        const allResponse = await fetch(`${apiBase}/api/product_info`)
         if (allResponse.ok) {
           const allData = await allResponse.json()
           const related = allData.filter(p => p.id.toString() !== id).slice(0, 18)
