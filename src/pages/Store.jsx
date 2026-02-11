@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 export default function Store() {
   const { apiBase, authHeaders } = useAuth();
   const [guitars, setGuitars] = useState([]);
+  const [filteredGuitars, setFilteredGuitars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -25,7 +26,10 @@ export default function Store() {
           throw new Error(text || `HTTP ${res.status}`);
         }
         const data = await res.json();
-        if (!cancelled) setGuitars(data);
+        if (!cancelled) {
+          setGuitars(data);
+          setFilteredGuitars(data);
+        }
       } catch (e) {
         console.error(e);
         if (!cancelled) setError("Nem sikerült betölteni a termékeket.");
@@ -36,6 +40,10 @@ export default function Store() {
     return () => (cancelled = true);
   }, [apiBase, authHeaders]);
 
+  const handleFiltersChange = (filtered) => {
+    setFilteredGuitars(filtered);
+  };
+
   return (
     <div>
       <NavBar />
@@ -43,10 +51,10 @@ export default function Store() {
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
             <div className="d-none d-lg-block position-sticky" style={{ top: "50vh", transform: "translateY(-50%)" }}>
-              <Filters />
+              <Filters onFiltersChange={handleFiltersChange} products={guitars} />
             </div>
             <div className="d-lg-none">
-              <Filters />
+              <Filters onFiltersChange={handleFiltersChange} products={guitars} />
             </div>
           </aside>
           <section className="col-12 col-lg-10 ps-lg-5">
@@ -54,7 +62,7 @@ export default function Store() {
             {error && <div className="alert alert-danger">{error}</div>}
             {!loading && !error && (
               <div className="row g-5">
-                {guitars.map((guitar) => (
+                {filteredGuitars.map((guitar) => (
                   <div key={guitar.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex">
                     <Card
                       id={guitar.id}

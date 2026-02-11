@@ -20,7 +20,7 @@ function App() {
           <Route path="/guitar-builder" element={<GuitarBuilder />} />
           <Route path="/store" element={<Store />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/product/:id" element={<Product />} />
+          <Route path="/products/:id" element={<Product />} />
           <Route path="/saved-products" element={<SavedProducts />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginRegister />} />
