@@ -75,7 +75,7 @@ export default function Filters({ onFiltersChange, products = [] }) {
   }
 
   return (
-    <div className="p-3 rounded border bg-body-tertiary text-body">
+    <div className="p-3 rounded border bg-body-tertiary text-body" style={{ width: '100%' }}>
       <button
         className="btn btn-link text-decoration-none w-100 text-start p-0 d-flex justify-content-between align-items-center mb-3 text-body"
         onClick={() => setIsOpen(!isOpen)}

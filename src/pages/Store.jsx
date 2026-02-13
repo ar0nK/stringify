@@ -50,7 +50,7 @@ export default function Store() {
       <div className="container-fluid mt-4 px-lg-5">
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
-            <div className="d-none d-lg-block position-sticky" style={{ top: "50vh", transform: "translateY(-50%)" }}>
+            <div className="d-none d-lg-block position-sticky" style={{ top: "calc(100px + 1rem)", width: "100%" }}>
               <Filters onFiltersChange={handleFiltersChange} products={guitars} />
             </div>
             <div className="d-lg-none">
