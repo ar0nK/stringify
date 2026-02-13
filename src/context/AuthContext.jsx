@@ -32,9 +32,9 @@ export const AuthProvider = ({ children }) => {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   });
 
-  const login = async (loginName, jelszo) => {
+  const login = async (email, jelszo) => {
     try {
-      const saltRes = await fetch(`${API_BASE}/Login/GetSalt/${encodeURIComponent(loginName)}`, {
+      const saltRes = await fetch(`${API_BASE}/Login/GetSalt/${encodeURIComponent(email)}`, {
         method: 'GET',
       });
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          loginName: loginName,
+          email: email,
           tmpHash: tmpHash,
         }),
       });
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(u));
 
-      return { success: true };
+      return { success: true, name: data.name };
     } catch (error) {
       return { success: false, error: error.message };
     }

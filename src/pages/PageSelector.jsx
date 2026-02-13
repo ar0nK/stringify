@@ -1,9 +1,22 @@
 import React from 'react'
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
 import guitarbuilderimg from '../img/guitarbuildericon.png'
 import webshopimg from '../img/webshopicon.png'
 
 export default function PageSelector() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGuitarBuilderClick = (e) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      navigate('/guitar-builder');
+    } else {
+      navigate('/login', { state: { from: { pathname: '/guitar-builder' } } });
+    }
+  };
+
   return (
     <div className="px-2 bg-white text-dark" style={{ minHeight: '100vh' }}>
       <h1 className='p-3 text-center text-dark' style={{ fontSize: 'clamp(2rem, 10vw, 4.5rem)' }}>Stringify</h1>
@@ -23,7 +36,7 @@ export default function PageSelector() {
               <img className="icon-image rounded-3" src={guitarbuilderimg} alt="" />
               <h4 className='text-dark'>Gitárépítő</h4>
               <h6 className='text-dark'>Tervezd meg álomgitárodat a Gitárépítő oldalon: válassz formát, hardvert és elektronikát, és alkoss egyedi hangszert.</h6>
-              <Link to="/guitar-builder"><button style={{fontFamily: 'Inter'}} className='btn btn-dark rounded mt-2'>Tovább</button></Link>
+              <button onClick={handleGuitarBuilderClick} style={{fontFamily: 'Inter'}} className='btn btn-dark rounded mt-2'>Tovább</button>
             </div>
           </div>
         </div>

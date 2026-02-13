@@ -12,8 +12,8 @@ export default function LoginRegister() {
   const [keresztnev, setKeresztnev] = useState("");
   const [telefonszam, setTelefonszam] = useState("");
   const [email, setEmail] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
 
-  const [loginName, setLoginName] = useState("");
   const [jelszo, setJelszo] = useState("");
   const [jelszo2, setJelszo2] = useState("");
 
@@ -29,10 +29,14 @@ export default function LoginRegister() {
 
     try {
       if (isLogin) {
-        const result = await login(loginName.trim(), jelszo);
+        const result = await login(loginEmail.trim(), jelszo);
 
         if (result.success) {
           setMessage("Sikeres bejelentkezés!");
+          
+          // Show welcome alert
+          alert(`Üdvözlünk, ${result.name}!`);
+          
           setTimeout(() => {
             navigate("/");
           }, 1000);
@@ -90,14 +94,14 @@ export default function LoginRegister() {
             {isLogin ? (
               <>
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Felhasználónév</label>
+                  <label className="login-register-label form-label mb-2">Email cím</label>
                   <input
-                    type="text"
+                    type="email"
                     className="login-register-input form-control rounded-2 py-2"
                     required
-                    value={loginName}
-                    onChange={(e) => setLoginName(e.target.value)}
-                    placeholder="Teljes név"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    placeholder="pelda@email.com"
                   />
                 </div>
 
@@ -200,7 +204,7 @@ export default function LoginRegister() {
                 setIsLogin(!isLogin);
                 setError("");
                 setMessage("");
-                setLoginName("");
+                setLoginEmail("");
                 setJelszo("");
               }}
               className="login-register-toggle btn btn-link text-decoration-none p-0"

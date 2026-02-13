@@ -24,7 +24,7 @@ const Card = ({
 
       <div className="product-content">
         <h3 className="product-title">
-          <Link to={`/product/${id}`} className="text-decoration-none">{title}</Link>
+          <Link to={`/products/${id}`} className="text-decoration-none">{title}</Link>
         </h3>
 
         <div className="product-rating">
