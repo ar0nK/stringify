@@ -5,9 +5,10 @@ import Filters from "../components/Filters.jsx";
 import { useAuth } from "../context/AuthContext";
 
 export default function Store() {
-  const { apiBase, authHeaders } = useAuth();
+  const { apiBase, authHeaders, isAuthenticated } = useAuth();
   const [guitars, setGuitars] = useState([]);
   const [filteredGuitars, setFilteredGuitars] = useState([]);
+  const [favorites, setFavorites] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -40,8 +41,75 @@ export default function Store() {
     return () => (cancelled = true);
   }, [apiBase, authHeaders]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setFavorites(new Set());
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${apiBase}/api/kedvencetermek`, {
+          method: "GET",
+          headers: authHeaders(),
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) {
+            setFavorites(new Set(data));
+          }
+        } else if (res.status === 401) {
+          if (!cancelled) {
+            setFavorites(new Set());
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch favorites:", e);
+      }
+    })();
+    return () => (cancelled = true);
+  }, [apiBase, authHeaders, isAuthenticated]);
+
   const handleFiltersChange = (filtered) => {
     setFilteredGuitars(filtered);
+  };
+
+  const toggleFavorite = async (productId) => {
+    if (!isAuthenticated) {
+      alert("Kérjük, jelentkezz be a kedvencek használatához!");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${productId}`, {
+        method: "POST",
+        headers: authHeaders(),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        
+        setFavorites(prev => {
+          const newFavorites = new Set(prev);
+          if (data.isFavorite) {
+            newFavorites.add(productId);
+          } else {
+            newFavorites.delete(productId);
+          }
+          return newFavorites;
+        });
+      } else if (res.status === 401) {
+        alert("Kérjük, jelentkezz be újra!");
+      } else {
+        const errorData = await res.text();
+        console.error("Toggle favorite failed:", errorData);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      alert("Hiba történt a kedvencek módosítása során.");
+    }
   };
 
   return (
@@ -75,6 +143,8 @@ export default function Store() {
                       previewDescription={guitar.previewDescription}
                       isAvailable={guitar.isAvailable}
                       price={guitar.price}
+                      isFavorite={favorites.has(guitar.id)}
+                      onToggleFavorite={toggleFavorite}
                       onAddToCart={() => console.log(`${guitar.title} added to cart`)}
                     />
                   </div>

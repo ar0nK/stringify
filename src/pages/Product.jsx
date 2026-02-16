@@ -3,16 +3,18 @@ import { useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import NavBar from '../components/NavBar'
 import Card from '../components/Card'
-import { Star, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
+import { Star, ChevronLeft, ChevronRight, X, ZoomIn, Heart } from 'lucide-react'
 import '../style/Product.css'
 
 export default function Product() {
   const { id } = useParams()
-  const { apiBase } = useAuth()
+  const { apiBase, authHeaders, isAuthenticated } = useAuth()
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [favorites, setFavorites] = useState(new Set())
   
   const [showModal, setShowModal] = useState(false)
   const [showLightbox, setShowLightbox] = useState(false)
@@ -26,7 +28,6 @@ export default function Product() {
         setLoading(true)
         setError(null)
         
-        // Fetch the specific product
         const response = await fetch(`${apiBase}/api/product_info/${id}`)
         if (!response.ok) {
           throw new Error('Product not found')
@@ -35,12 +36,23 @@ export default function Product() {
         setProduct(data)
         setActiveImage(data.images?.[0] || '')
         
-        // Fetch all products for related products
         const allResponse = await fetch(`${apiBase}/api/product_info`)
         if (allResponse.ok) {
           const allData = await allResponse.json()
           const related = allData.filter(p => p.id.toString() !== id).slice(0, 18)
           setRelatedProducts(related)
+        }
+
+        if (isAuthenticated) {
+          const favRes = await fetch(`${apiBase}/api/kedvencetermek`, {
+            headers: authHeaders()
+          })
+          if (favRes.ok) {
+            const favData = await favRes.json()
+            const favSet = new Set(favData)
+            setFavorites(favSet)
+            setIsFavorite(favSet.has(parseInt(id)))
+          }
         }
       } catch (err) {
         setError(err.message)
@@ -50,15 +62,75 @@ export default function Product() {
     }
 
     fetchProduct()
-  }, [id, apiBase])
+  }, [id, apiBase, authHeaders, isAuthenticated])
 
   const desktopSlides = []
   for (let i = 0; i < relatedProducts.length; i += 3) {
     desktopSlides.push(relatedProducts.slice(i, i + 3))
   }
 
-  const handleSave = () => {
-    alert('Termék sikeresen lementve.')
+  const handleToggleFavorite = async () => {
+    if (!isAuthenticated) {
+      alert('Kérjük, jelentkezz be a kedvencek használatához!')
+      return
+    }
+
+    try {
+      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${id}`, {
+        method: 'POST',
+        headers: authHeaders()
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setIsFavorite(data.isFavorite)
+        
+        setFavorites(prev => {
+          const newFavorites = new Set(prev)
+          if (data.isFavorite) {
+            newFavorites.add(parseInt(id))
+          } else {
+            newFavorites.delete(parseInt(id))
+          }
+          return newFavorites
+        })
+      } else if (res.status === 401) {
+        alert('Kérjük, jelentkezz be újra!')
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error)
+      alert('Hiba történt a kedvencek módosítása során.')
+    }
+  }
+
+  const toggleRelatedFavorite = async (productId) => {
+    if (!isAuthenticated) {
+      alert('Kérjük, jelentkezz be a kedvencek használatához!')
+      return
+    }
+
+    try {
+      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${productId}`, {
+        method: 'POST',
+        headers: authHeaders()
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        
+        setFavorites(prev => {
+          const newFavorites = new Set(prev)
+          if (data.isFavorite) {
+            newFavorites.add(productId)
+          } else {
+            newFavorites.delete(productId)
+          }
+          return newFavorites
+        })
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error)
+    }
   }
 
   const handleLightboxMouseMove = (e) => {
@@ -98,7 +170,6 @@ export default function Product() {
     ? product.images 
     : [activeImage]
 
-  // Parse shortDescription if it's a string (convert to array)
   const shortDescriptionArray = typeof product.shortDescription === 'string'
     ? product.shortDescription.split('\n').filter(line => line.trim())
     : Array.isArray(product.shortDescription)
@@ -138,10 +209,14 @@ export default function Product() {
             </div>
 
             <button
-              className="btn position-absolute top-0 end-0 m-3 save-button"
-              onClick={handleSave}
+              className={`btn position-absolute top-0 end-0 m-3 save-button ${isFavorite ? 'is-favorite' : ''}`}
+              onClick={handleToggleFavorite}
             >
-              <i className="bi bi-heart"></i>
+              <Heart 
+                size={24} 
+                fill={isFavorite ? 'currentColor' : 'none'}
+                strokeWidth={2}
+              />
             </button>
           </div>
 
@@ -206,6 +281,8 @@ export default function Product() {
                             previewDescription={guitar.previewDescription}
                             isAvailable={guitar.isAvailable}
                             price={guitar.price}
+                            isFavorite={favorites.has(guitar.id)}
+                            onToggleFavorite={toggleRelatedFavorite}
                             onAddToCart={() => console.log(`${guitar.title} added to cart`)}
                           />
                         </div>
@@ -226,7 +303,11 @@ export default function Product() {
             <div className="d-flex gap-3 pb-3">
               {relatedProducts.slice(0, 6).map((guitar) => (
                 <div key={guitar.id} className="mobile-product-card">
-                  <Card {...guitar} />
+                  <Card 
+                    {...guitar} 
+                    isFavorite={favorites.has(guitar.id)}
+                    onToggleFavorite={toggleRelatedFavorite}
+                  />
                 </div>
               ))}
             </div>
