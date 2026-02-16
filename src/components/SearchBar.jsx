@@ -60,7 +60,7 @@ export default function SearchBar({ theme }) {
   };
 
   const handleResultClick = (productId) => {
-    navigate(`/product/${productId}`);
+    navigate(`/product_info/${productId}`);
     setShowResults(false);
     setSearchQuery('');
   };
