@@ -31,10 +31,12 @@ const Card = ({
       await onToggleFavorite(id);
     }
   };
+  console.log()
 
   return (
     <div className="product-card">
-      <Link to={`/product/${id}`} className="product-image">
+      <Link to={`/product_info/${id}`} className="product-image">
+      
         {thumbnail && <img src={thumbnail} alt={title} />}
           
         <button

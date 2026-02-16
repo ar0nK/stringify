@@ -44,7 +44,7 @@ export default function Product() {
         }
 
         if (isAuthenticated) {
-          const favRes = await fetch(`${apiBase}/api/kedvencetermek`, {
+          const favRes = await fetch(`${apiBase}/api/kedvenctermek`, {
             headers: authHeaders()
           })
           if (favRes.ok) {
