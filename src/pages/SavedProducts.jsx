@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function SavedProducts() {
-  const { apiBase, authHeaders, isAuthenticated, loading: authLoading } = useAuth();
+  const { apiBase, authHeaders, isAuthenticated, loading: authLoading, setFavoritesCount } = useAuth();
   const navigate = useNavigate();
   const [savedProducts, setSavedProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -16,13 +16,11 @@ export default function SavedProducts() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: '/saved-products' } } });
+      navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
       return;
     }
 
-    if (!isAuthenticated) {
-      return;
-    }
+    if (!isAuthenticated) return;
 
     let cancelled = false;
 
@@ -30,41 +28,38 @@ export default function SavedProducts() {
       try {
         setLoading(true);
         setError("");
-        
-        const res = await fetch(`${apiBase}/api/kedvencetermek/products`, {
+
+        const res = await fetch(`${apiBase}/api/KedvencTermek/products`, {
           method: "GET",
           headers: authHeaders(),
         });
 
         if (!res.ok) {
           if (res.status === 401) {
-            navigate('/login', { state: { from: { pathname: '/saved-products' } } });
+            navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
             return;
           }
           throw new Error('Nem sikerült betölteni a kedvenc termékeket');
         }
 
         const data = await res.json();
-        
+
         if (!cancelled) {
           setSavedProducts(data);
           setFilteredProducts(data);
           setFavorites(new Set(data.map(p => p.id)));
+          setFavoritesCount(data.length);
         }
       } catch (e) {
         console.error(e);
-        if (!cancelled) {
-          setError("Nem sikerült betölteni a kedvenc termékeket.");
-        }
+        if (!cancelled) setError("Nem sikerült betölteni a kedvenc termékeket.");
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     })();
 
     return () => (cancelled = true);
-  }, [apiBase, authHeaders, isAuthenticated, authLoading, navigate]);
+  }, [apiBase, authHeaders, isAuthenticated, authLoading, navigate, setFavoritesCount]);
 
   const handleFiltersChange = (filtered) => {
     setFilteredProducts(filtered);
@@ -72,16 +67,20 @@ export default function SavedProducts() {
 
   const toggleFavorite = async (productId) => {
     try {
-      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${productId}`, {
+      const res = await fetch(`${apiBase}/api/KedvencTermek/toggle/${productId}`, {
         method: "POST",
         headers: authHeaders(),
       });
 
       if (res.ok) {
         const data = await res.json();
-        
+
         if (!data.isFavorite) {
-          setSavedProducts(prev => prev.filter(p => p.id !== productId));
+          setSavedProducts(prev => {
+            const updated = prev.filter(p => p.id !== productId);
+            setFavoritesCount(updated.length);
+            return updated;
+          });
           setFilteredProducts(prev => prev.filter(p => p.id !== productId));
           setFavorites(prev => {
             const newFavorites = new Set(prev);
@@ -90,15 +89,13 @@ export default function SavedProducts() {
           });
         }
       } else if (res.status === 401) {
-        navigate('/login', { state: { from: { pathname: '/saved-products' } } });
+        navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
       } else {
         const errorData = await res.text();
         console.error("Toggle favorite failed:", errorData);
-        alert("Hiba történt a művelet során.");
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      alert("Hiba történt a kedvencek módosítása során.");
     }
   };
 
@@ -132,9 +129,9 @@ export default function SavedProducts() {
           </aside>
           <section className="col-12 col-lg-10 ps-lg-5">
             <h2 className="mb-4">Kedvenc Termékek</h2>
-            
+
             {error && <div className="alert alert-danger">{error}</div>}
-            
+
             {!error && filteredProducts.length === 0 && (
               <div className="text-center py-5">
                 <i className="bi bi-heart" style={{ fontSize: '4rem', color: '#dee2e6' }}></i>
@@ -143,14 +140,14 @@ export default function SavedProducts() {
                 <a href="/store" className="btn btn-primary mt-3">Ugrás a boltba</a>
               </div>
             )}
-            
+
             {filteredProducts.length > 0 && (
               <div className="row g-5">
                 {filteredProducts.map(product => (
                   <div key={product.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex">
                     <Card
                       id={product.id}
-                      images={product.images || []} 
+                      images={product.images || []}
                       title={product.title}
                       rating={product.rating}
                       reviewCount={product.reviewCount}

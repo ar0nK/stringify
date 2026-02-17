@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../style/LoginRegister.css";
 
 export default function LoginRegister() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const [isLogin, setIsLogin] = useState(searchParams.get("register") !== "true");
   const navigate = useNavigate();
   const { login, register } = useAuth();
 
@@ -33,10 +34,7 @@ export default function LoginRegister() {
 
         if (result.success) {
           setMessage("Sikeres bejelentkezés!");
-          
-          // Show welcome alert
           alert(`Üdvözlünk, ${result.name}!`);
-          
           setTimeout(() => {
             navigate("/");
           }, 1000);

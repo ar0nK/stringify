@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import NavBar from '../components/NavBar'
 import Card from '../components/Card'
@@ -8,34 +8,40 @@ import '../style/Product.css'
 
 export default function Product() {
   const { id } = useParams()
-  const { apiBase, authHeaders, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const { apiBase, authHeaders, isAuthenticated, setFavoritesCount } = useAuth()
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isFavorite, setIsFavorite] = useState(false)
   const [favorites, setFavorites] = useState(new Set())
-  
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [toast, setToast] = useState(null) // { message, type }
+
   const [showModal, setShowModal] = useState(false)
   const [showLightbox, setShowLightbox] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
   const [activeImage, setActiveImage] = useState(null)
 
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true)
         setError(null)
-        
+
         const response = await fetch(`${apiBase}/api/product_info/${id}`)
-        if (!response.ok) {
-          throw new Error('Product not found')
-        }
+        if (!response.ok) throw new Error('Product not found')
         const data = await response.json()
         setProduct(data)
         setActiveImage(data.images?.[0] || '')
-        
+
         const allResponse = await fetch(`${apiBase}/api/product_info`)
         if (allResponse.ok) {
           const allData = await allResponse.json()
@@ -44,7 +50,7 @@ export default function Product() {
         }
 
         if (isAuthenticated) {
-          const favRes = await fetch(`${apiBase}/api/kedvenctermek`, {
+          const favRes = await fetch(`${apiBase}/api/KedvencTermek`, {
             headers: authHeaders()
           })
           if (favRes.ok) {
@@ -71,12 +77,15 @@ export default function Product() {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
-      alert('Kérjük, jelentkezz be a kedvencek használatához!')
+      navigate('/login?register=true')
       return
     }
 
+    setIsAnimating(true)
+    setTimeout(() => setIsAnimating(false), 300)
+
     try {
-      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${id}`, {
+      const res = await fetch(`${apiBase}/api/KedvencTermek/toggle/${id}`, {
         method: 'POST',
         headers: authHeaders()
       })
@@ -84,7 +93,9 @@ export default function Product() {
       if (res.ok) {
         const data = await res.json()
         setIsFavorite(data.isFavorite)
-        
+        setFavoritesCount(prev => data.isFavorite ? prev + 1 : prev - 1)
+        showToast(data.isFavorite ? `${product?.title} hozzáadva a kedvencekhez!` : `${product?.title} eltávolítva a kedvencekből.`, data.isFavorite ? 'success' : 'info')
+
         setFavorites(prev => {
           const newFavorites = new Set(prev)
           if (data.isFavorite) {
@@ -95,29 +106,28 @@ export default function Product() {
           return newFavorites
         })
       } else if (res.status === 401) {
-        alert('Kérjük, jelentkezz be újra!')
+        navigate('/login?register=true')
       }
     } catch (error) {
       console.error('Error toggling favorite:', error)
-      alert('Hiba történt a kedvencek módosítása során.')
     }
   }
 
   const toggleRelatedFavorite = async (productId) => {
     if (!isAuthenticated) {
-      alert('Kérjük, jelentkezz be a kedvencek használatához!')
+      navigate('/login?register=true')
       return
     }
 
     try {
-      const res = await fetch(`${apiBase}/api/kedvencetermek/toggle/${productId}`, {
+      const res = await fetch(`${apiBase}/api/KedvencTermek/toggle/${productId}`, {
         method: 'POST',
         headers: authHeaders()
       })
 
       if (res.ok) {
         const data = await res.json()
-        
+        setFavoritesCount(prev => data.isFavorite ? prev + 1 : prev - 1)
         setFavorites(prev => {
           const newFavorites = new Set(prev)
           if (data.isFavorite) {
@@ -166,8 +176,8 @@ export default function Product() {
     )
   }
 
-  const thumbnails = product.images && product.images.length > 0 
-    ? product.images 
+  const thumbnails = product.images && product.images.length > 0
+    ? product.images
     : [activeImage]
 
   const shortDescriptionArray = typeof product.shortDescription === 'string'
@@ -179,6 +189,18 @@ export default function Product() {
   return (
     <div>
       <NavBar />
+
+      {/* Toast notification */}
+      {toast && (
+        <div
+          className={`position-fixed bottom-0 end-0 m-4 alert ${toast.type === 'success' ? 'alert-success' : 'alert-secondary'} d-flex align-items-center gap-2 shadow`}
+          style={{ zIndex: 9999, minWidth: '260px', transition: 'opacity 0.3s' }}
+        >
+          <Heart size={16} fill="currentColor" />
+          {toast.message}
+        </div>
+      )}
+
       <div className='container mt-4'>
         <div className='row align-items-center'>
           <div className='col-md-1 order-2 order-md-1 d-flex flex-row flex-md-column gap-2 justify-content-center mt-3 mt-md-0 overflow-auto'>
@@ -209,11 +231,11 @@ export default function Product() {
             </div>
 
             <button
-              className={`btn position-absolute top-0 end-0 m-3 save-button ${isFavorite ? 'is-favorite' : ''}`}
+              className={`btn position-absolute top-0 end-0 m-3 save-button text-danger ${isFavorite ? 'is-favorite' : ''} ${isAnimating ? 'animate' : ''}`}
               onClick={handleToggleFavorite}
             >
-              <Heart 
-                size={24} 
+              <Heart
+                size={24}
                 fill={isFavorite ? 'currentColor' : 'none'}
                 strokeWidth={2}
               />
@@ -303,8 +325,8 @@ export default function Product() {
             <div className="d-flex gap-3 pb-3">
               {relatedProducts.slice(0, 6).map((guitar) => (
                 <div key={guitar.id} className="mobile-product-card">
-                  <Card 
-                    {...guitar} 
+                  <Card
+                    {...guitar}
                     isFavorite={favorites.has(guitar.id)}
                     onToggleFavorite={toggleRelatedFavorite}
                   />
