@@ -11,7 +11,6 @@ export default function LoginRegister() {
 
   const [csaladnev, setCsaladnev] = useState("");
   const [keresztnev, setKeresztnev] = useState("");
-  const [telefonszam, setTelefonszam] = useState("");
   const [email, setEmail] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
 
@@ -59,13 +58,12 @@ export default function LoginRegister() {
         }
 
         const nev = `${csaladnev} ${keresztnev}`.trim();
-        const result = await register(nev, email.trim(), telefonszam.trim(), jelszo);
+        const result = await register(nev, email.trim(), jelszo);
 
         if (result.success) {
           setMessage(result.message);
           setCsaladnev("");
           setKeresztnev("");
-          setTelefonszam("");
           setEmail("");
           setJelszo("");
           setJelszo2("");
@@ -146,17 +144,6 @@ export default function LoginRegister() {
                     required
                     value={keresztnev}
                     onChange={(e) => setKeresztnev(e.target.value)}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Telefonszám</label>
-                  <input
-                    type="text"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={telefonszam}
-                    onChange={(e) => setTelefonszam(e.target.value)}
                   />
                 </div>
 

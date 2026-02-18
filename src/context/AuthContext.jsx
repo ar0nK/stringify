@@ -108,12 +108,12 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const register = async (nev, email, telefonszam, jelszo) => {
+  const register = async (nev, email, jelszo) => {
     try {
       const response = await fetch(`${apiBase}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nev, email, telefonszam, jelszo })
+        body: JSON.stringify({ nev, email, jelszo })
       });
 
       if (!response.ok) {
