@@ -2,9 +2,11 @@ import React from 'react'
 import NavBar from '../components/NavBar'
 import cart from '../temp/cart.json'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState(cart);
+  const navigate = useNavigate();
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -72,7 +74,7 @@ export default function Cart() {
             <p>Termékek: {cartItems.length}</p>
             <h4>Teljes ár: {formatPrice(calculateTotal())} Ft</h4>
             <br />
-            <button className="btn btn-danger w-100">Fizetés</button>
+            <button className="btn btn-danger w-100" onClick={() => navigate('/delivery')}>Fizetés</button>
           </div>
         </div>
       </div>

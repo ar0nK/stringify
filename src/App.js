@@ -12,6 +12,7 @@ import SavedProducts from './pages/SavedProducts';
 import Cart from './pages/Cart';
 import LoginRegister from './pages/LoginRegister';
 import Profile from './pages/Profile';
+import Delivery from './pages/Delivery';
 
 function App() {
   return (
@@ -26,6 +27,14 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<LoginRegister />} />
             <Route path="/profile" element={<Profile />} />
+
+            <Route
+              path="/delivery" element={
+                <ProtectedRoute>
+                  <Delivery />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/guitar-builder" element={
