@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../style/LoginRegister.css";
@@ -21,6 +21,17 @@ export default function LoginRegister() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const previousTheme = document.documentElement.getAttribute("data-bs-theme");
+    document.documentElement.setAttribute("data-bs-theme", "light");
+    
+    return () => {
+      if (previousTheme) {
+        document.documentElement.setAttribute("data-bs-theme", previousTheme);
+      }
+    };
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
