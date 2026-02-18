@@ -1,224 +1,260 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
+import '../style/FilterSlider.css'
 
 export default function Filters({ onFiltersChange, products = [] }) {
+
   const [guitarTypes, setGuitarTypes] = useState({
     electric: false,
     acoustic: false,
     bass: false
   })
-  const [sortBy, setSortBy] = useState(null)
-  const [priceEnabled, setPriceEnabled] = useState(false)
-  const [price, setPrice] = useState(null)
-  const [ratingEnabled, setRatingEnabled] = useState(false)
-  const [rating, setRating] = useState(1.0)
-  const [isOpen, setIsOpen] = useState(true)
-  const [theme, setTheme] = useState(() => document.documentElement.getAttribute("data-bs-theme") || "light")
 
-  const minAr = products.length > 0 ? Math.min(...products.map(p => p.price)) : 0
-  const maxAr = products.length > 0 ? Math.max(...products.map(p => p.price)) : 1000000
+  const TYPE_MAP = {
+    electric: "Elektromos",
+    acoustic: "Akusztikus",
+    bass: "Basszus"
+  }
+
+
+  const [sortBy, setSortBy] = useState(null);
+  const [priceEnabled, setPriceEnabled] = useState(false);
+  const [ratingEnabled, setRatingEnabled] = useState(false);
+
+  const [rating, setRating] = useState(1.0);
+  const [isOpen, setIsOpen] = useState(true);
+
+  // ár határok kiszámítása
+  const minAr = products.length
+    ? Math.min(...products.map(p => p.price))
+    : 0;
+
+  const maxAr = products.length
+    ? Math.max(...products.map(p => p.price))
+    : 1000000;
+
+  // DOUBLE RANGE STATE
+  const [priceRange, setPriceRange] = useState([minAr, maxAr]);
 
   useEffect(() => {
-    if (price === null) setPrice(maxAr)
-  }, [maxAr, price])
+    setPriceRange([minAr, maxAr]);
+  }, [minAr, maxAr]);
 
-  useEffect(() => {
-    const el = document.documentElement
-    const update = () => setTheme(el.getAttribute("data-bs-theme") || "light")
-    update()
-    const observer = new MutationObserver(update)
-    observer.observe(el, { attributes: true, attributeFilter: ["data-bs-theme"] })
-    return () => observer.disconnect()
-  }, [])
+  const formatPrice = (price) =>
+    price.toLocaleString("hu-HU");
 
-  const formatPrice = (price) => price.toLocaleString('hu-HU')
+  // ----------------------------
+  // SLIDER HANDLERS
+  // ----------------------------
+
+  const handleMinPrice = (e) => {
+    const value = Math.min(
+      Number(e.target.value),
+      priceRange[1] - 1
+    );
+    setPriceRange([value, priceRange[1]]);
+  };
+
+  const handleMaxPrice = (e) => {
+    const value = Math.max(
+      Number(e.target.value),
+      priceRange[0] + 1
+    );
+    setPriceRange([priceRange[0], value]);
+  };
+
+  // ----------------------------
 
   const handleGuitarTypeChange = (type) => {
     setGuitarTypes(prev => ({
       ...prev,
       [type]: !prev[type]
-    }))
-  }
+    }));
+  };
 
   const handleSortChange = (sort) => {
-    setSortBy(prev => prev === sort ? null : sort)
-  }
+    setSortBy(prev => (prev === sort ? null : sort));
+  };
+
+  // ----------------------------
+  // FILTER APPLY
+  // ----------------------------
 
   const handleApplyFilters = () => {
-    let filtered = [...products]
+    let filtered = [...products];
 
     const selectedTypes = Object.entries(guitarTypes)
-      .filter(([_, isSelected]) => isSelected)
-      .map(([type, _]) => type)
+      .filter(([_, selected]) => selected)
+      .map(([key]) => TYPE_MAP[key])
 
     if (selectedTypes.length > 0) {
-      filtered = filtered.filter(guitar => {
-        const guitarType = guitar.type?.toLowerCase() || ''
-        return selectedTypes.some(type => guitarType.includes(type))
-      })
+      filtered = filtered.filter(guitar =>
+        selectedTypes.includes(guitar.type)
+      )
     }
 
-    if (ratingEnabled && rating !== null) {
-      filtered = filtered.filter(guitar => guitar.rating >= rating)
-    }
-
-    if (priceEnabled && price !== null) {
-      filtered = filtered.filter(guitar => guitar.price <= price)
+    if (priceEnabled) {
+      filtered = filtered.filter(
+        g =>
+          g.price >= priceRange[0] &&
+          g.price <= priceRange[1]
+      );
     }
 
     if (sortBy === 'abc') {
-      filtered.sort((a, b) => a.title.localeCompare(b.title))
-    } else if (sortBy === 'popular') {
-      filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
+      filtered.sort((a, b) => a.title.localeCompare(b.title));
     }
 
-    onFiltersChange(filtered)
-  }
+    else if (sortBy === 'priceAsc') {
+      filtered.sort((a, b) => a.price - b.price);
+    }
+
+    else if (sortBy === 'priceDesc') {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+
+    else if (sortBy === 'popular') {
+      filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+    }
+
+    onFiltersChange(filtered);
+  };
+
+  // slider százalékos track
+  const minPercent =
+    ((priceRange[0] - minAr) / (maxAr - minAr)) * 100;
+
+  const maxPercent =
+    ((priceRange[1] - minAr) / (maxAr - minAr)) * 100;
 
   return (
-    <div className="p-3 rounded border bg-body-tertiary text-body" style={{ width: '100%' }}>
-      <button
-        className="btn btn-link text-decoration-none w-100 text-start p-0 d-flex justify-content-between align-items-center mb-3 text-body"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h6 className="mb-0"><i className='bi bi-funnel me-2'></i>Filterek</h6>
-        <i className={`bi bi-chevron-${isOpen ? 'up' : 'down'}`}></i>
-      </button>
+    <div className="p-3 rounded border bg-body-tertiary">
+
+        <h6>Filterek</h6>
+
+
+
+      <div className="mb-3 text-start">
+
+        {["electric", "acoustic", "bass"].map(type => (
+          <div className="form-check" key={type}>
+            <input
+              type="checkbox"
+              className="form-check-input"
+              checked={guitarTypes[type]}
+              onChange={() => handleGuitarTypeChange(type)}
+            />
+            <label className="form-check-label">
+              {type === "electric" && "Elektromos gitárok"}
+              {type === "acoustic" && "Akusztikus gitárok"}
+              {type === "bass" && "Basszus gitárok"}
+            </label>
+          </div>
+        ))}
+
+        <hr />
+
+        {/* ================= ABC ================= */}
+
+        <div className="form-check">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            checked={sortBy === "abc"}
+            onChange={() => handleSortChange("abc")}
+          />
+          <label className="form-check-label">
+            ABC szerint
+          </label>
+        </div>
+      </div>
+
+      {/* ================= ÁR NÖVEKVŐ/CSÖKKENŐ ================= */}
+
+      <div className="form-check">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          id="sortPriceAsc"
+          checked={sortBy === 'priceAsc'}
+          onChange={() => handleSortChange('priceAsc')}
+        />
+        <label className="form-check-label" htmlFor="sortPriceAsc">Ár szerint növekvő</label>
+      </div>
+
+      <div className="form-check">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          id="sortPriceDesc"
+          checked={sortBy === 'priceDesc'}
+          onChange={() => handleSortChange('priceDesc')}
+        />
+        <label className="form-check-label" htmlFor="sortPriceDesc">Ár szerint csökkenő</label>
+      </div>
+
 
       {isOpen && (
-        <div>
-          <form>
-            <div className="mb-3 text-start">
-              <div className="form-check">
-                <input 
-                  type="checkbox" 
-                  className="form-check-input" 
-                  id="electric" 
-                  checked={guitarTypes.electric}
-                  onChange={() => handleGuitarTypeChange('electric')}
-                />
-                <label className="form-check-label text-start" htmlFor="electric">Elektromos gitárok</label>
-              </div>
-              <div className="form-check">
-                <input 
-                  type="checkbox" 
-                  className="form-check-input" 
-                  id="acoustic" 
-                  checked={guitarTypes.acoustic}
-                  onChange={() => handleGuitarTypeChange('acoustic')}
-                />
-                <label className="form-check-label text-start" htmlFor="acoustic">Akusztikus gitárok</label>
-              </div>
-              <div className="form-check">
-                <input 
-                  type="checkbox" 
-                  className="form-check-input" 
-                  id="bass" 
-                  checked={guitarTypes.bass}
-                  onChange={() => handleGuitarTypeChange('bass')}
-                />
-                <label className="form-check-label text-start" htmlFor="bass">Basszus gitárok</label>
-              </div>
-              <div className="form-check">
-                <input 
-                  type="checkbox" 
-                  className="form-check-input" 
-                  id="sortAbc" 
-                  checked={sortBy === 'abc'}
-                  onChange={() => handleSortChange('abc')}
-                />
-                <label className="form-check-label text-start" htmlFor="sortAbc">ABC szerint</label>
-              </div>
-              <div className="form-check">
-                <input 
-                  type="checkbox" 
-                  className="form-check-input" 
-                  id="sortPopular" 
-                  checked={sortBy === 'popular'}
-                  onChange={() => handleSortChange('popular')}
-                />
-                <label className="form-check-label text-start" htmlFor="sortPopular">Népszerűség szerint</label>
-              </div>
-            </div>
+        <>
+          {/* ================= PRICE SLIDER ================= */}
+          <div className="mb-4">
 
-            <hr className="my-3" />
+            <div className="d-flex justify-content-between">
+              <label className="fw-bold small">Ár</label>
 
-            <div className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <label className="form-label fw-bold small text-start mb-0">Értékelés</label>
-                <div className="form-check form-switch">
-                  <input 
-                    className="form-check-input" 
-                    type="checkbox" 
-                    id="ratingToggle"
-                    checked={ratingEnabled}
-                    onChange={(e) => setRatingEnabled(e.target.checked)}
-                  />
-                </div>
-              </div>
               <input
-                type="range"
-                min={1.0}
-                max={5.0}
-                step={0.1}
-                value={rating}
-                className="form-range"
-                id="ratingRange"
-                onChange={(e) => setRating(e.target.value)}
-                disabled={!ratingEnabled}
-                style={{ accentColor: '#0d6efd', opacity: ratingEnabled ? 1 : 0.5 }}
+                type="checkbox"
+                checked={priceEnabled}
+                onChange={(e) => setPriceEnabled(e.target.checked)}
               />
-              <div className="d-flex justify-content-between small text-body-secondary">
-                <span>1.0</span>
-                <span>5.0</span>
-              </div>
-              <div className="text-center mt-2 fw-bold">
-                {Number(rating).toFixed(1)}
-              </div>
             </div>
 
-            <div className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <label className="form-label fw-bold small text-start mb-0">Ár</label>
-                <div className="form-check form-switch">
-                  <input 
-                    className="form-check-input" 
-                    type="checkbox" 
-                    id="priceToggle"
-                    checked={priceEnabled}
-                    onChange={(e) => setPriceEnabled(e.target.checked)}
-                  />
-                </div>
-              </div>
+            <div className="range-slider position-relative mt-3">
+
+              {/* TRACK */}
+              <div
+                className="slider-track"
+                style={{
+                  left: `${minPercent}%`,
+                  right: `${100 - maxPercent}%`
+                }}
+              />
+
+              {/* MIN */}
               <input
                 type="range"
                 min={minAr}
                 max={maxAr}
-                value={price || maxAr}
-                className="form-range"
-                id="priceRange"
-                onChange={(e) => setPrice(e.target.value)}
+                value={priceRange[0]}
+                onChange={handleMinPrice}
                 disabled={!priceEnabled}
-                style={{ accentColor: '#0d6efd', opacity: priceEnabled ? 1 : 0.5 }}
               />
-              <div className="d-flex justify-content-between small text-body-secondary">
-                <span>{formatPrice(minAr)} Ft</span>
-                <span>{formatPrice(maxAr)} Ft</span>
-              </div>
-              <div className="text-center mt-2 fw-bold">
-                {formatPrice(Number(price || maxAr))} Ft
-              </div>
+
+              {/* MAX */}
+              <input
+                type="range"
+                min={minAr}
+                max={maxAr}
+                value={priceRange[1]}
+                onChange={handleMaxPrice}
+                disabled={!priceEnabled}
+              />
             </div>
 
-            <button 
-              type="button" 
-              className="btn btn-danger btn-sm w-100"
-              onClick={handleApplyFilters}
-            >
-              Frissítés
-            </button>
-          </form>
-        </div>
+            <div className="d-flex justify-content-between mt-2 small">
+              <span>{formatPrice(priceRange[0])} Ft</span>
+              <span>{formatPrice(priceRange[1])} Ft</span>
+            </div>
+
+          </div>
+
+          <button
+            className="btn btn-danger w-100"
+            onClick={handleApplyFilters}
+          >
+            Frissítés
+          </button>
+        </>
       )}
     </div>
-  )
+  );
 }
