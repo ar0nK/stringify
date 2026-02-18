@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
 export default function GuitarForm() {
-  const [theme, setTheme] = useState("light")
+  const [theme, setTheme] = useState(() => document.documentElement.getAttribute("data-bs-theme") || "light")
 
   useEffect(() => {
-    setTheme(localStorage.getItem("theme") || "light")
+    const el = document.documentElement
+    const update = () => setTheme(el.getAttribute("data-bs-theme") || "light")
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(el, { attributes: true, attributeFilter: ["data-bs-theme"] })
+    return () => observer.disconnect()
   }, [])
 
   return (

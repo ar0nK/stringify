@@ -17,7 +17,7 @@ export default function Product() {
   const [isFavorite, setIsFavorite] = useState(false)
   const [favorites, setFavorites] = useState(new Set())
   const [isAnimating, setIsAnimating] = useState(false)
-  const [toast, setToast] = useState(null) // { message, type }
+  const [toast, setToast] = useState(null)
 
   const [showModal, setShowModal] = useState(false)
   const [showLightbox, setShowLightbox] = useState(false)

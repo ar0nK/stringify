@@ -11,10 +11,15 @@ export default function GuitarBuilder() {
   const [neckPickup, setNeckPickup] = useState('single-coil')
   const [middlePickup, setMiddlePickup] = useState('single-coil')
   const [bridgePickup, setBridgePickup] = useState('single-coil')
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light")
+  const [theme, setTheme] = useState(() => document.documentElement.getAttribute("data-bs-theme") || "light")
 
   useEffect(() => {
-    setTheme(localStorage.getItem("theme") || "light")
+    const el = document.documentElement
+    const update = () => setTheme(el.getAttribute("data-bs-theme") || "light")
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(el, { attributes: true, attributeFilter: ["data-bs-theme"] })
+    return () => observer.disconnect()
   }, [])
 
   const ViewButton = ({ label, value }) => (
