@@ -7,8 +7,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [favoritesCount, setFavoritesCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
-  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const GUEST_CART_KEY = 'cart_guest';
 
   const authHeaders = useCallback(() => {
     const token = localStorage.getItem('authToken');
@@ -16,6 +18,15 @@ export function AuthProvider({ children }) {
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
     };
+  }, []);
+
+  const handleUnauthorized = useCallback(() => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    setUser(null);
+    setIsAuthenticated(false);
+    setFavoritesCount(0);
+    setCartItems([]);
   }, []);
 
   const hashPassword = async (password, salt) => {
@@ -26,16 +37,56 @@ export function AuthProvider({ children }) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
+  const loadGuestCart = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(GUEST_CART_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(i => ({
+        productId: Number(i.productId),
+        title: i.title || '',
+        price: Number(i.price) || 0,
+        image: i.image || '',
+        isAvailable: i.isAvailable ?? true,
+        quantity: Math.max(1, Number(i.quantity) || 1),
+      }));
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const saveGuestCart = useCallback((items) => {
+    localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
+  }, []);
+
+  const fetchCartFromServer = useCallback(async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return [];
+    const res = await fetch(`${apiBase}/api/Cart`, {
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+    });
+    if (res.status === 401) { handleUnauthorized(); return []; }
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.items || []).map(i => ({
+      productId: Number(i.productId),
+      title: i.title,
+      price: Number(i.price) || 0,
+      image: i.image || '',
+      isAvailable: i.isAvailable ?? true,
+      quantity: Number(i.quantity) || 1,
+    }));
+  }, [apiBase, handleUnauthorized]);
+
   const fetchFavoritesCount = useCallback(async () => {
     const token = localStorage.getItem('authToken');
     if (!token) return;
     try {
       const res = await fetch(`${apiBase}/api/KedvencTermek`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
+      if (res.status === 401) { handleUnauthorized(); return; }
       if (res.ok) {
         const data = await res.json();
         setFavoritesCount(data.length);
@@ -43,7 +94,117 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to fetch favorites count:', e);
     }
-  }, [apiBase]);
+  }, [apiBase, handleUnauthorized]);
+
+  const refreshCart = useCallback(async () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setCartItems(await fetchCartFromServer());
+      return;
+    }
+    setCartItems(loadGuestCart());
+  }, [fetchCartFromServer, loadGuestCart]);
+
+  const addToCart = useCallback(async (product, qty = 1) => {
+    const productId = Number(product.id ?? product.productId);
+    const quantity = Math.max(1, Number(qty) || 1);
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const res = await fetch(`${apiBase}/api/Cart/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ termekId: productId, quantity })
+      });
+      if (res.status === 401) { handleUnauthorized(); return; }
+      setCartItems(await fetchCartFromServer());
+      return;
+    }
+
+    setCartItems(prev => {
+      const next = [...prev];
+      const idx = next.findIndex(i => i.productId === productId);
+      if (idx >= 0) {
+        next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
+      } else {
+        next.push({
+          productId,
+          title: product.title || product.nev || '',
+          price: Number(product.price ?? product.ar) || 0,
+          image: (product.images?.[0] ?? product.image ?? ''),
+          isAvailable: product.isAvailable ?? product.elerheto ?? true,
+          quantity,
+        });
+      }
+      saveGuestCart(next);
+      return next;
+    });
+  }, [apiBase, fetchCartFromServer, saveGuestCart, handleUnauthorized]);
+
+  const updateCartQuantity = useCallback(async (productId, quantity) => {
+    const pid = Number(productId);
+    const qty = Math.max(0, Number(quantity) || 0);
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const res = await fetch(`${apiBase}/api/Cart/set`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ termekId: pid, quantity: qty })
+      });
+      if (res.status === 401) { handleUnauthorized(); return; }
+      setCartItems(await fetchCartFromServer());
+      return;
+    }
+
+    setCartItems(prev => {
+      const next = prev
+        .map(i => i.productId === pid ? { ...i, quantity: qty } : i)
+        .filter(i => i.quantity > 0);
+      saveGuestCart(next);
+      return next;
+    });
+  }, [apiBase, fetchCartFromServer, saveGuestCart, handleUnauthorized]);
+
+  const removeFromCart = useCallback(async (productId) => {
+    const pid = Number(productId);
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const res = await fetch(`${apiBase}/api/Cart/remove/product/${pid}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+      });
+      if (res.status === 401) { handleUnauthorized(); return; }
+      setCartItems(await fetchCartFromServer());
+      return;
+    }
+
+    setCartItems(prev => {
+      const next = prev.filter(i => i.productId !== pid);
+      saveGuestCart(next);
+      return next;
+    });
+  }, [apiBase, fetchCartFromServer, saveGuestCart, handleUnauthorized]);
+
+  const clearCart = useCallback(async () => {
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const res = await fetch(`${apiBase}/api/Cart/clear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+      });
+      if (res.status === 401) { handleUnauthorized(); return; }
+      setCartItems(await fetchCartFromServer());
+      return;
+    }
+
+    localStorage.removeItem(GUEST_CART_KEY);
+    setCartItems([]);
+  }, [apiBase, fetchCartFromServer, handleUnauthorized]);
+
+  const cartCount = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -57,13 +218,16 @@ export function AuthProvider({ children }) {
         fetchFavoritesCount();
       } catch (error) {
         console.error('Failed to parse stored user:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
+        handleUnauthorized();
       }
     }
 
     setLoading(false);
-  }, [fetchFavoritesCount]);
+  }, [fetchFavoritesCount, handleUnauthorized]);
+
+  useEffect(() => {
+    refreshCart();
+  }, [refreshCart]);
 
   const login = async (email, password) => {
     try {
@@ -100,6 +264,7 @@ export function AuthProvider({ children }) {
       setUser(userData);
       setIsAuthenticated(true);
       fetchFavoritesCount();
+      await refreshCart();
 
       return { success: true, name: data.name };
     } catch (error) {
@@ -144,11 +309,8 @@ export function AuthProvider({ children }) {
       }
     }
 
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    setUser(null);
-    setIsAuthenticated(false);
-    setFavoritesCount(0);
+    handleUnauthorized();
+    setCartItems(loadGuestCart());
   };
 
   const value = {
@@ -163,6 +325,13 @@ export function AuthProvider({ children }) {
     favoritesCount,
     setFavoritesCount,
     fetchFavoritesCount,
+    cartItems,
+    cartCount,
+    refreshCart,
+    addToCart,
+    updateCartQuantity,
+    removeFromCart,
+    clearCart,
   };
 
   return (
@@ -174,8 +343,6 @@ export function AuthProvider({ children }) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

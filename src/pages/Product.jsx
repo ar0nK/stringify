@@ -9,7 +9,7 @@ import '../style/Product.css'
 export default function Product() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { apiBase, authHeaders, isAuthenticated, setFavoritesCount } = useAuth()
+  const { apiBase, authHeaders, isAuthenticated, setFavoritesCount, addToCart } = useAuth()
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -29,6 +29,16 @@ export default function Product() {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
   };
+
+  const handleAddToCart = async () => {
+    await addToCart(product, 1)
+    showToast(`${product?.title} hozzáadva a kosárhoz!`, 'success')
+  }
+
+  const handleAddRelatedToCart = async (guitar) => {
+    await addToCart(guitar, 1)
+    showToast(`${guitar?.title} hozzáadva a kosárhoz!`, 'success')
+  }
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -190,7 +200,6 @@ export default function Product() {
     <div>
       <NavBar />
 
-      {/* Toast notification */}
       {toast && (
         <div
           className={`position-fixed bottom-0 end-0 m-4 alert ${toast.type === 'success' ? 'alert-success' : 'alert-secondary'} d-flex align-items-center gap-2 shadow`}
@@ -268,7 +277,7 @@ export default function Product() {
             <h5 className={product.isAvailable ? "text-success" : "text-danger"}>
               {product.isAvailable ? "Jelenleg raktáron" : "Nincs raktáron"}
             </h5>
-            <button className='btn btn-danger btn-lg w-100 mt-4 rounded'>
+            <button className='btn btn-danger btn-lg w-100 mt-4 rounded' onClick={handleAddToCart}>
               Kosárba
             </button>
           </div>
@@ -305,7 +314,7 @@ export default function Product() {
                             price={guitar.price}
                             isFavorite={favorites.has(guitar.id)}
                             onToggleFavorite={toggleRelatedFavorite}
-                            onAddToCart={() => console.log(`${guitar.title} added to cart`)}
+                            onAddToCart={() => handleAddRelatedToCart(guitar)}
                           />
                         </div>
                       ))}

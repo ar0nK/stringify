@@ -4,10 +4,10 @@ import Card from "../components/Card.jsx";
 import NavBar from "../components/NavBar.jsx";
 import Filters from "../components/Filters.jsx";
 import { useAuth } from "../context/AuthContext";
-import { Heart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 
 export default function Store() {
-  const { apiBase, authHeaders, isAuthenticated, setFavoritesCount } = useAuth();
+  const { authHeaders, isAuthenticated, setFavoritesCount, addToCart } = useAuth();
   const navigate = useNavigate();
   const [guitars, setGuitars] = useState([]);
   const [filteredGuitars, setFilteredGuitars] = useState([]);
@@ -27,7 +27,7 @@ export default function Store() {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch(`${apiBase}/api/products`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/products`, {
           method: "GET",
           headers: authHeaders(),
         });
@@ -40,15 +40,14 @@ export default function Store() {
           setGuitars(data);
           setFilteredGuitars(data);
         }
-      } catch (e) {
-        console.error(e);
+      } catch {
         if (!cancelled) setError("Nem sikerült betölteni a termékeket.");
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => (cancelled = true);
-  }, [apiBase, authHeaders]);
+  }, [authHeaders]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -59,7 +58,7 @@ export default function Store() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${apiBase}/api/KedvencTermek`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/KedvencTermek`, {
           method: "GET",
           headers: authHeaders(),
         });
@@ -70,12 +69,11 @@ export default function Store() {
         } else if (res.status === 401) {
           if (!cancelled) setFavorites(new Set());
         }
-      } catch (e) {
-        console.error("Failed to fetch favorites:", e);
-      }
+      } catch {}
     })();
+
     return () => (cancelled = true);
-  }, [apiBase, authHeaders, isAuthenticated]);
+  }, [authHeaders, isAuthenticated]);
 
   const handleFiltersChange = (filtered) => {
     setFilteredGuitars(filtered);
@@ -90,7 +88,7 @@ export default function Store() {
     const productTitle = guitars.find(g => g.id === productId)?.title || '';
 
     try {
-      const res = await fetch(`${apiBase}/api/KedvencTermek/toggle/${productId}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/KedvencTermek/toggle/${productId}`, {
         method: "POST",
         headers: authHeaders(),
       });
@@ -99,29 +97,24 @@ export default function Store() {
         const data = await res.json();
         setFavorites(prev => {
           const newFavorites = new Set(prev);
-          if (data.isFavorite) {
-            newFavorites.add(productId);
-          } else {
-            newFavorites.delete(productId);
-          }
+          if (data.isFavorite) newFavorites.add(productId);
+          else newFavorites.delete(productId);
           setFavoritesCount(newFavorites.size);
           return newFavorites;
         });
         showToast(
-          data.isFavorite
-            ? `${productTitle} hozzáadva a kedvencekhez!`
-            : `${productTitle} eltávolítva a kedvencekből.`,
+          data.isFavorite ? `${productTitle} hozzáadva a kedvencekhez!` : `${productTitle} eltávolítva a kedvencekből.`,
           data.isFavorite ? 'success' : 'info'
         );
       } else if (res.status === 401) {
         navigate('/login?register=true');
-      } else {
-        const errorData = await res.text();
-        console.error("Toggle favorite failed:", errorData);
       }
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-    }
+    } catch {}
+  };
+
+  const handleAddToCart = async (guitar) => {
+    await addToCart(guitar, 1);
+    showToast(`${guitar.title} hozzáadva a kosárhoz!`, 'success');
   };
 
   return (
@@ -129,11 +122,9 @@ export default function Store() {
       <NavBar />
 
       {toast && (
-        <div
-          className={`position-fixed bottom-0 end-0 m-4 alert ${toast.type === 'success' ? 'alert-success' : 'alert-secondary'} d-flex align-items-center gap-2 shadow`}
-          style={{ zIndex: 9999, minWidth: '260px', transition: 'opacity 0.3s' }}
-        >
-          <Heart size={16} fill="currentColor" />
+        <div className={`position-fixed bottom-0 end-0 m-4 alert ${toast.type === 'success' ? 'alert-success' : 'alert-secondary'} d-flex align-items-center gap-2 shadow`}
+          style={{ zIndex: 9999, minWidth: '260px' }}>
+          {toast.type === 'success' ? <ShoppingCart size={16} /> : <Heart size={16} fill="currentColor" />}
           {toast.message}
         </div>
       )}
@@ -148,6 +139,7 @@ export default function Store() {
               <Filters onFiltersChange={handleFiltersChange} products={guitars} />
             </div>
           </aside>
+
           <section className="col-12 col-lg-10 ps-lg-5">
             {loading && <div className="py-4">Betöltés...</div>}
             {error && <div className="alert alert-danger">{error}</div>}
@@ -168,7 +160,7 @@ export default function Store() {
                       price={guitar.price}
                       isFavorite={favorites.has(guitar.id)}
                       onToggleFavorite={toggleFavorite}
-                      onAddToCart={() => console.log(`${guitar.title} added to cart`)}
+                      onAddToCart={() => handleAddToCart(guitar)}
                     />
                   </div>
                 ))}
