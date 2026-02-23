@@ -1,113 +1,57 @@
-import React, { useState, useEffect } from 'react'
-import NavBar from '../components/NavBar'
-import GuitarBuilderForm from '../components/GuitarForm'
-import '../style/GuitarBuilder.css'
-import StratocasterSVG from '../components/guitar-builder/controls/svg/StratocasterSVG'
+import React, { useState } from "react";
+import NavBar from "../components/NavBar";
+import BuilderCanvas from "../components/guitar-builder/BuilderCanvas";
+import BuilderOptions from "../components/guitar-builder/BuilderOptions";
+import PriceBox from "../components/guitar-builder/PriceBox";
+import "../style/GuitarBuilder.css";
 
 export default function GuitarBuilder() {
-  const [view, setView] = useState('front')
-  const [bodyColor, setBodyColor] = useState('#000000')
-  const [pickguard, setPickguard] = useState(true)
-  const [neckPickup, setNeckPickup] = useState('single-coil')
-  const [middlePickup, setMiddlePickup] = useState('single-coil')
-  const [bridgePickup, setBridgePickup] = useState('single-coil')
-  const [theme, setTheme] = useState(() => document.documentElement.getAttribute("data-bs-theme") || "light")
 
-  useEffect(() => {
-    const el = document.documentElement
-    const update = () => setTheme(el.getAttribute("data-bs-theme") || "light")
-    update()
-    const observer = new MutationObserver(update)
-    observer.observe(el, { attributes: true, attributeFilter: ["data-bs-theme"] })
-    return () => observer.disconnect()
-  }, [])
+  // ===== builder state =====
+  const [config, setConfig] = useState({
+    type: "strat",
 
-  const ViewButton = ({ label, value }) => (
-    <button
-      type="button"
-      onClick={() => setView(value)}
-      className={`btn btn-sm rounded-pill me-2 ${view === value ? 'btn-danger' : theme === "dark" ? 'btn-outline-light' : 'btn-light'}`}
-    >
-      {label}
-    </button>
-  )
+    body: "body_black.png",
+    pickguard: "pickguard_white.png",
+    neck: "neck_maple.png",
+    bridge: "bridge_standard.png",
+    headstock: "headstock_fender.png"
+  });
+
+  const updateOption = (key, value) => {
+    setConfig(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
 
   return (
     <>
       <NavBar />
 
-      <form className="container-fluid builder-container">
+      <div className="container-fluid builder-container">
         <div className="row gx-4">
 
-          <div className="col-12 col-md-4 col-lg-3 d-flex">
-            <GuitarBuilderForm 
-              bodyColor={bodyColor}
-              setBodyColor={setBodyColor}
-              pickguard={pickguard}
-              setPickguard={setPickguard}
-              neckPickup={neckPickup}
-              setNeckPickup={setNeckPickup}
-              middlePickup={middlePickup}
-              setMiddlePickup={setMiddlePickup}
-              bridgePickup={bridgePickup}
-              setBridgePickup={setBridgePickup}
-              theme={theme}
+          {/* BAL OLDAL — OPCIÓK */}
+          <div className="col-lg-3 col-md-4">
+            <BuilderOptions
+              config={config}
+              updateOption={updateOption}
             />
-            <div className={`vr ms-3 d-none d-md-block ${theme === "dark" ? "opacity-50" : "opacity-0"}`} />
           </div>
 
-          <div className="col-12 col-md-8 col-lg-6 d-flex justify-content-center my-4 my-lg-0">
-            <div className={`builder-preview position-relative w-100 ${theme === "dark" ? "bg-dark border-secondary" : "border-secondary"}`}>
-
-              <div className="view-toggle">
-                <ViewButton label="Előli nézet" value="front" />
-                <ViewButton label="Hátsó nézet" value="back" />
-              </div>
-
-              <div className="h-100 d-flex align-items-center justify-content-center">
-                {view === 'front' && (
-                  <StratocasterSVG
-                    bodyColor={bodyColor}
-                    showPickguard={pickguard}
-                    neckPickup={neckPickup}
-                    middlePickup={middlePickup}
-                    bridgePickup={bridgePickup}
-                  />
-                )}
-
-                {view === 'back' && (
-                  <div className={theme === "dark" ? "text-secondary" : "text-muted"}>
-                    Hátsó nézet (később SVG)
-                  </div>
-                )}
-              </div>
-            </div>
+          {/* KÖZÉP — CANVAS */}
+          <div className="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
+            <BuilderCanvas config={config} />
           </div>
 
-          <div className="col-12 col-lg-3 text-center d-flex flex-column justify-content-center">
-            <h2 className={`fw-bold ${theme === "dark" ? "text-light" : "text-dark"}`}>Teljes ár:</h2>
-
-            <div className={`fw-normal mx-auto builder-price ${theme === "dark" ? "text-light" : "text-dark"}`}>
-              999,999 Ft
-            </div>
-
-            <div className="d-grid gap-3 px-3 px-lg-0">
-              <button type="submit" className="btn btn-primary-custom">
-                Kosárba
-              </button>
-
-              <button type="button" className="btn btn-save-custom">
-                Termék elmentése
-              </button>
-
-              <button type="reset" className="btn btn-reset-custom">
-                Újrakezdés
-              </button>
-            </div>
+          {/* JOBB OLDAL — ÁR */}
+          <div className="col-lg-3">
+            <PriceBox config={config} />
           </div>
 
         </div>
-      </form>
+      </div>
     </>
-  )
+  );
 }
