@@ -9,11 +9,38 @@ export default function Filters({ onFiltersChange, products = [] }) {
     bass: false
   })
 
-  const TYPE_MAP = {
-    electric: "Elektromos",
-    acoustic: "Akusztikus",
-    bass: "Basszus"
+  const TYPE_ALIASES = {
+    electric: ["electric", "elektromos", "strat", "tele", "les paul", "sg", "jazzmaster", "superstrat", "explorer", "flying v"],
+    acoustic: ["acoustic", "akusztikus", "dreadnought", "klasszikus", "classical", "nylon", "western", "folk", "parlor", "auditorium", "jumbo"],
+    bass: ["bass", "basszus", "p-bass", "precision bass", "j-bass", "jazz bass"]
   }
+
+  const CATEGORY_ID_MAP = {
+    1: "electric",
+    2: "acoustic",
+    3: "bass"
+  };
+
+  const normalizeText = (value) =>
+    value
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  const NORMALIZED_ALIASES = Object.fromEntries(
+    Object.entries(TYPE_ALIASES).map(([key, aliases]) => [
+      key,
+      aliases.map(normalizeText)
+    ])
+  );
+
+  const resolveTypeFromText = (text) => {
+    const haystack = normalizeText(text);
+    return Object.entries(NORMALIZED_ALIASES).find(([, aliases]) =>
+      aliases.some(alias => haystack.includes(alias))
+    )?.[0] ?? null;
+  };
 
 
   const [sortBy, setSortBy] = useState(null);
@@ -84,12 +111,55 @@ export default function Filters({ onFiltersChange, products = [] }) {
 
     const selectedTypes = Object.entries(guitarTypes)
       .filter(([_, selected]) => selected)
-      .map(([key]) => TYPE_MAP[key])
+      .map(([key]) => key)
 
     if (selectedTypes.length > 0) {
-      filtered = filtered.filter(guitar =>
-        selectedTypes.includes(guitar.type)
-      )
+      filtered = filtered.filter(guitar => {
+        const categoryId = Number(
+          guitar.categoryId ??
+          guitar.categoryID ??
+          guitar.category_id ??
+          guitar.kategoriaId ??
+          guitar.category?.id ??
+          guitar.category?.categoryId ??
+          guitar.category?.categoryID ??
+          guitar.category?.category_id ??
+          guitar.kategoria?.id ??
+          guitar.category
+        );
+        if (Number.isFinite(categoryId) && CATEGORY_ID_MAP[categoryId]) {
+          return selectedTypes.includes(CATEGORY_ID_MAP[categoryId]);
+        }
+
+        const explicitType = [
+          guitar.type,
+          guitar.guitarType,
+          guitar.category?.name ?? guitar.category
+        ].find(Boolean);
+
+        if (explicitType) {
+          const resolvedExplicit = resolveTypeFromText(explicitType);
+          if (resolvedExplicit) {
+            return selectedTypes.includes(resolvedExplicit);
+          }
+        }
+
+        const shortDescription = Array.isArray(guitar.shortDescription)
+          ? guitar.shortDescription.join(" ")
+          : guitar.shortDescription;
+
+        const fallbackText = [
+          guitar.title,
+          guitar.previewDescription,
+          shortDescription
+        ].filter(Boolean).join(" ");
+
+        const resolvedFallback = fallbackText
+          ? resolveTypeFromText(fallbackText)
+          : null;
+
+        return resolvedFallback ? selectedTypes.includes(resolvedFallback) : false;
+      })
     }
 
     if (priceEnabled) {
