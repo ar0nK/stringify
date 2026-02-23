@@ -357,6 +357,16 @@ export default function Product() {
           >
             <X size={40} />
           </button>
+          {thumbnails.length > 1 && (
+            <>
+              <button className="position-absolute start-0 btn text-white ms-3" style={{ zIndex: 10 }} onClick={(e) => { e.stopPropagation(); const i = thumbnails.indexOf(activeImage); setActiveImage(thumbnails[(i - 1 + thumbnails.length) % thumbnails.length]); setIsZoomed(false) }}>
+                <ChevronLeft size={40} />
+              </button>
+              <button className="position-absolute end-0 btn text-white me-3" style={{ zIndex: 10 }} onClick={(e) => { e.stopPropagation(); const i = thumbnails.indexOf(activeImage); setActiveImage(thumbnails[(i + 1) % thumbnails.length]); setIsZoomed(false) }}>
+                <ChevronRight size={40} />
+              </button>
+            </>
+          )}
           <div
             className={`position-relative lightbox-image-container ${isZoomed ? 'zoom-out' : 'zoom-in'}`}
             onClick={(e) => {
