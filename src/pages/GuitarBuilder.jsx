@@ -1,28 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import BuilderCanvas from "../components/guitar-builder/BuilderCanvas";
 import BuilderOptions from "../components/guitar-builder/BuilderOptions";
 import PriceBox from "../components/guitar-builder/PriceBox";
+import { useAuth } from "../context/AuthContext";
 import "../style/GuitarBuilder.css";
 
 export default function GuitarBuilder() {
+  const { apiBase } = useAuth();
 
-  // ===== builder state =====
-  const [config, setConfig] = useState({
-    type: "strat",
+  const [options, setOptions] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(null);
 
-    body: "body_black.png",
-    pickguard: "pickguard_white.png",
-    neck: "neck_maple.png",
-    bridge: "bridge_standard.png",
-    headstock: "headstock_fender.png"
-  });
+  const [selectedTestforma,  setSelectedTestforma]  = useState(null);
+  const [selectedFinish,     setSelectedFinish]     = useState(null);
+  const [selectedPickguard,  setSelectedPickguard]  = useState(null);
+  const [selectedNeck,       setSelectedNeck]       = useState(null);
 
-  const updateOption = (key, value) => {
-    setConfig(prev => ({
-      ...prev,
-      [key]: value
-    }));
+  useEffect(() => {
+    fetch(`${apiBase}/api/egyedigitar/options`)
+      .then(res => {
+        if (!res.ok) throw new Error("Nem sikerült betölteni az opciókat.");
+        return res.json();
+      })
+      .then(data => {
+        setOptions(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [apiBase]);
+
+  const handleTestformaChange = (testforma) => {
+    setSelectedTestforma(testforma);
+    setSelectedFinish(null);
+    setSelectedPickguard(null);
   };
 
   return (
@@ -30,27 +45,57 @@ export default function GuitarBuilder() {
       <NavBar />
 
       <div className="container-fluid builder-container">
-        <div className="row gx-4">
 
-          {/* BAL OLDAL — OPCIÓK */}
-          <div className="col-lg-3 col-md-4">
-            <BuilderOptions
-              config={config}
-              updateOption={updateOption}
-            />
+        {loading && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "60vh" }}>
+            <div className="spinner-border text-danger" role="status" />
           </div>
+        )}
 
-          {/* KÖZÉP — CANVAS */}
-          <div className="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
-            <BuilderCanvas config={config} />
+        {error && (
+          <div className="alert alert-danger m-4">{error}</div>
+        )}
+
+        {!loading && !error && options && (
+          <div className="row gx-4">
+
+            <div className="col-lg-3 col-md-4">
+              <BuilderOptions
+                testformak={options.testformak}
+                finishek={options.finishek.filter(f => f.testFormaId === selectedTestforma?.id)}
+                pickguardok={options.pickguardok.filter(p => p.testFormaId === selectedTestforma?.id)}
+                nyakak={options.nyakak}
+                selectedTestforma={selectedTestforma}
+                selectedFinish={selectedFinish}
+                selectedPickguard={selectedPickguard}
+                selectedNeck={selectedNeck}
+                onTestformaChange={handleTestformaChange}
+                onFinishChange={setSelectedFinish}
+                onPickguardChange={setSelectedPickguard}
+                onNeckChange={setSelectedNeck}
+              />
+            </div>
+
+            <div className="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
+              <BuilderCanvas
+                selectedFinish={selectedFinish}
+                selectedPickguard={selectedPickguard}
+                selectedNeck={selectedNeck}
+              />
+            </div>
+
+            <div className="col-lg-3">
+              <PriceBox
+                selectedTestforma={selectedTestforma}
+                selectedFinish={selectedFinish}
+                selectedPickguard={selectedPickguard}
+                selectedNeck={selectedNeck}
+              />
+            </div>
+
           </div>
+        )}
 
-          {/* JOBB OLDAL — ÁR */}
-          <div className="col-lg-3">
-            <PriceBox config={config} />
-          </div>
-
-        </div>
       </div>
     </>
   );
