@@ -3,36 +3,18 @@ import '../style/FilterSlider.css'
 
 export default function Filters({ onFiltersChange, products = [] }) {
 
-  const [guitarTypes, setGuitarTypes] = useState({ electric: false, acoustic: false, bass: false })
-
-  const TYPE_ALIASES = {
-    electric: ["electric", "elektromos", "strat", "tele", "les paul", "sg", "jazzmaster", "superstrat", "explorer", "flying v"],
-    acoustic: ["acoustic", "akusztikus", "dreadnought", "klasszikus", "classical", "nylon", "western", "folk", "parlor", "auditorium", "jumbo"],
-    bass: ["bass", "basszus", "p-bass", "precision bass", "j-bass", "jazz bass"]
-  }
-
-  const CATEGORY_ID_MAP = { 1: "electric", 2: "acoustic", 3: "bass" };
-
-  const normalizeText = (value) =>
-    value.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-  const NORMALIZED_ALIASES = Object.fromEntries(
-    Object.entries(TYPE_ALIASES).map(([key, aliases]) => [key, aliases.map(normalizeText)])
-  );
-
-  const resolveTypeFromText = (text) => {
-    const haystack = normalizeText(text);
-    return Object.entries(NORMALIZED_ALIASES).find(([, aliases]) =>
-      aliases.some(alias => haystack.includes(alias))
-    )?.[0] ?? null;
-  };
+  const [guitarTypes, setGuitarTypes] = useState({ "1": false, "2": false, "3": false })
 
   const [sortBy, setSortBy] = useState(null);
   const [priceEnabled, setPriceEnabled] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
-  const minAr = products.length ? Math.min(...products.map(p => p.price)) : 0;
-  const maxAr = products.length ? Math.max(...products.map(p => p.price)) : 1000000;
+  const prices = products
+    .map(p => p.price ?? p.ar)
+    .map(value => Number(value))
+    .filter(Number.isFinite);
+  const minAr = prices.length ? Math.min(...prices) : 0;
+  const maxAr = prices.length ? Math.max(...prices) : 1000000;
 
   const [priceRange, setPriceRange] = useState([minAr, maxAr]);
 
@@ -50,8 +32,8 @@ export default function Filters({ onFiltersChange, products = [] }) {
     setPriceRange([priceRange[0], value]);
   };
 
-  const handleGuitarTypeChange = (type) => {
-    setGuitarTypes(prev => ({ ...prev, [type]: !prev[type] }));
+  const handleGuitarTypeChange = (typeId) => {
+    setGuitarTypes(prev => ({ ...prev, [typeId]: !prev[typeId] }));
   };
 
   const handleSortChange = (sort) => {
@@ -61,45 +43,36 @@ export default function Filters({ onFiltersChange, products = [] }) {
   const handleApplyFilters = () => {
     let filtered = [...products];
 
-    const selectedTypes = Object.entries(guitarTypes)
+    const selectedTypeIds = Object.entries(guitarTypes)
       .filter(([_, selected]) => selected)
-      .map(([key]) => key)
+      .map(([key]) => Number(key))
+      .filter(Number.isFinite)
 
-    if (selectedTypes.length > 0) {
+    if (selectedTypeIds.length > 0) {
       filtered = filtered.filter(guitar => {
         const categoryId = Number(
+          guitar.GitarTipusId ?? guitar.gitarTipusId ??
+          guitar.gitarTipusID ?? guitar.gitarTipus?.id ?? guitar.gitarTipus?.gitarTipusId ??
           guitar.categoryId ?? guitar.categoryID ?? guitar.category_id ??
           guitar.kategoriaId ?? guitar.category?.id ?? guitar.category?.categoryId ??
           guitar.category?.categoryID ?? guitar.category?.category_id ??
           guitar.kategoria?.id ?? guitar.category
         );
-        if (Number.isFinite(categoryId) && CATEGORY_ID_MAP[categoryId]) {
-          return selectedTypes.includes(CATEGORY_ID_MAP[categoryId]);
-        }
-
-        const explicitType = [guitar.type, guitar.guitarType, guitar.category?.name ?? guitar.category].find(Boolean);
-        if (explicitType) {
-          const resolvedExplicit = resolveTypeFromText(explicitType);
-          if (resolvedExplicit) return selectedTypes.includes(resolvedExplicit);
-        }
-
-        const shortDescription = Array.isArray(guitar.shortDescription)
-          ? guitar.shortDescription.join(" ")
-          : guitar.shortDescription;
-
-        const fallbackText = [guitar.title, guitar.previewDescription, shortDescription].filter(Boolean).join(" ");
-        const resolvedFallback = fallbackText ? resolveTypeFromText(fallbackText) : null;
-        return resolvedFallback ? selectedTypes.includes(resolvedFallback) : false;
+        if (!Number.isFinite(categoryId)) return false;
+        return selectedTypeIds.includes(categoryId);
       })
     }
 
     if (priceEnabled) {
-      filtered = filtered.filter(g => g.price >= priceRange[0] && g.price <= priceRange[1]);
+      filtered = filtered.filter(g => {
+        const price = g.price ?? g.ar;
+        return price >= priceRange[0] && price <= priceRange[1];
+      });
     }
 
-    if (sortBy === 'abc') filtered.sort((a, b) => a.title.localeCompare(b.title));
-    else if (sortBy === 'priceAsc') filtered.sort((a, b) => a.price - b.price);
-    else if (sortBy === 'priceDesc') filtered.sort((a, b) => b.price - a.price);
+    if (sortBy === 'abc') filtered.sort((a, b) => (a.title ?? a.nev ?? "").localeCompare(b.title ?? b.nev ?? ""));
+    else if (sortBy === 'priceAsc') filtered.sort((a, b) => (a.price ?? a.ar ?? 0) - (b.price ?? b.ar ?? 0));
+    else if (sortBy === 'priceDesc') filtered.sort((a, b) => (b.price ?? b.ar ?? 0) - (a.price ?? a.ar ?? 0));
     else if (sortBy === 'popular') filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
 
     onFiltersChange(filtered);
@@ -113,15 +86,15 @@ export default function Filters({ onFiltersChange, products = [] }) {
       <h6>Filterek</h6>
       <div className="mb-3 text-start">
         <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="type-electric" checked={guitarTypes.electric} onChange={() => handleGuitarTypeChange("electric")} />
+          <input type="checkbox" className="form-check-input" id="type-electric" checked={guitarTypes["2"]} onChange={() => handleGuitarTypeChange("2")} />
           <label className="form-check-label" htmlFor="type-electric">Elektromos gitárok</label>
         </div>
         <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="type-acoustic" checked={guitarTypes.acoustic} onChange={() => handleGuitarTypeChange("acoustic")} />
+          <input type="checkbox" className="form-check-input" id="type-acoustic" checked={guitarTypes["1"]} onChange={() => handleGuitarTypeChange("1")} />
           <label className="form-check-label" htmlFor="type-acoustic">Akusztikus gitárok</label>
         </div>
         <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="type-bass" checked={guitarTypes.bass} onChange={() => handleGuitarTypeChange("bass")} />
+          <input type="checkbox" className="form-check-input" id="type-bass" checked={guitarTypes["3"]} onChange={() => handleGuitarTypeChange("3")} />
           <label className="form-check-label" htmlFor="type-bass">Basszus gitárok</label>
         </div>
         <hr />
