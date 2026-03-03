@@ -50,16 +50,14 @@ export default function Filters({ onFiltersChange, products = [] }) {
 
     if (selectedTypeIds.length > 0) {
       filtered = filtered.filter(guitar => {
-        const categoryId = Number(
-          guitar.GitarTipusId ?? guitar.gitarTipusId ??
-          guitar.gitarTipusID ?? guitar.gitarTipus?.id ?? guitar.gitarTipus?.gitarTipusId ??
-          guitar.categoryId ?? guitar.categoryID ?? guitar.category_id ??
-          guitar.kategoriaId ?? guitar.category?.id ?? guitar.category?.categoryId ??
-          guitar.category?.categoryID ?? guitar.category?.category_id ??
-          guitar.kategoria?.id ?? guitar.category
+        const guitarTypeId = Number(
+          guitar.guitarTypeId ?? guitar.GuitarTypeId ??
+          guitar.gitarTipusId ?? guitar.GitarTipusId ??
+          guitar.gitarTipusID ??
+          guitar.typeId ?? guitar.TypeId
         );
-        if (!Number.isFinite(categoryId)) return false;
-        return selectedTypeIds.includes(categoryId);
+        if (!Number.isFinite(guitarTypeId)) return false;
+        return selectedTypeIds.includes(guitarTypeId);
       })
     }
 
@@ -86,11 +84,11 @@ export default function Filters({ onFiltersChange, products = [] }) {
       <h6>Filterek</h6>
       <div className="mb-3 text-start">
         <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="type-electric" checked={guitarTypes["2"]} onChange={() => handleGuitarTypeChange("2")} />
+          <input type="checkbox" className="form-check-input" id="type-electric" checked={guitarTypes["1"]} onChange={() => handleGuitarTypeChange("1")} />
           <label className="form-check-label" htmlFor="type-electric">Elektromos gitárok</label>
         </div>
         <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="type-acoustic" checked={guitarTypes["1"]} onChange={() => handleGuitarTypeChange("1")} />
+          <input type="checkbox" className="form-check-input" id="type-acoustic" checked={guitarTypes["2"]} onChange={() => handleGuitarTypeChange("2")} />
           <label className="form-check-label" htmlFor="type-acoustic">Akusztikus gitárok</label>
         </div>
         <div className="form-check">
