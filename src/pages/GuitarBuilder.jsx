@@ -38,6 +38,7 @@ export default function GuitarBuilder() {
     setSelectedTestforma(testforma);
     setSelectedFinish(null);
     setSelectedPickguard(null);
+    setSelectedNeck(null);
   };
 
   return (
@@ -78,6 +79,7 @@ export default function GuitarBuilder() {
 
             <div className="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
               <BuilderCanvas
+                key={selectedTestforma?.id}
                 selectedFinish={selectedFinish}
                 selectedPickguard={selectedPickguard}
                 selectedNeck={selectedNeck}

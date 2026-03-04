@@ -15,7 +15,9 @@ export default function OptionSelect({ label, value, onChange, options, placehol
           onChange={e => onChange(e.target.value)}
           disabled={disabled}
         >
-          <option value="">{placeholder ?? "Válassz..."}</option>
+          {!optional && (
+            <option value="">{placeholder ?? "Válassz..."}</option>
+          )}
 
           {options.map(opt => (
             <option key={opt.value} value={opt.value}>

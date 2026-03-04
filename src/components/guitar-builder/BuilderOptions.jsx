@@ -43,14 +43,12 @@ export default function BuilderOptions({
         label="3. Pickguard (opcionális)"
         value={selectedPickguard?.id ?? ""}
         onChange={id => {
-          if (id === "") { onPickguardChange(null); return; }
           const found = pickguardok.find(p => p.id === Number(id));
           onPickguardChange(found ?? null);
         }}
         options={pickguardok.map(p => ({ label: `${p.nev} (+${p.ar.toLocaleString("hu-HU")} Ft)`, value: p.id, previewUrl: p.kepUrl }))}
-        placeholder="Nem kérek pickguardot"
+        placeholder="Válassz pickguardot..."
         disabled={!selectedTestforma}
-        optional
       />
 
       <OptionSelect
