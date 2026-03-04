@@ -24,18 +24,18 @@
 
 /* Finish (test/test forma) - alapvetően 100% */
 .guitar-finish {
-  max-width: 350px;
-  left: 10%;
-  top: 64.7%;
+  width: 400px;
+  left: 4.5%;
+  top: 61%;
   object-fit: contain;
   transform: rotate(-90deg);
 }
 
 /* Pickguard - általában kisebb, mint a test */
 .guitar-pickguard {
-  width: 350px;
-  left: 10%;
-  top: 64.7%;
+  width: 400px;
+  left: 4.5%;
+  top: 61%;
   object-fit: contain;
   transform: rotate(-90deg);
 }
