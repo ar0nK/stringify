@@ -66,7 +66,7 @@ export function AuthProvider({ children }) {
     const res = await fetch(`${apiBase}/api/Cart`, {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
     });
-    if (res.status === 401) { handleUnauthorized(); return []; }
+    if (res.status === 401) return [];
     if (!res.ok) return [];
     const data = await res.json();
     return (data.items || []).map(i => ({
@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
       isAvailable: i.isAvailable ?? true,
       quantity: Number(i.quantity) || 1,
     }));
-  }, [apiBase, handleUnauthorized]);
+  }, [apiBase]);
 
   const fetchFavoritesCount = useCallback(async () => {
     const token = localStorage.getItem('authToken');
@@ -86,7 +86,7 @@ export function AuthProvider({ children }) {
       const res = await fetch(`${apiBase}/api/KedvencTermek`, {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) return;
       if (res.ok) {
         const data = await res.json();
         setFavoritesCount(data.length);
@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to fetch favorites count:', e);
     }
-  }, [apiBase, handleUnauthorized]);
+  }, [apiBase]);
 
   const refreshCart = useCallback(async () => {
     const token = localStorage.getItem('authToken');
@@ -210,24 +210,28 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('authToken');
     const storedUser = localStorage.getItem('user');
 
-    if (token && storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
-        fetchFavoritesCount();
-      } catch (error) {
-        console.error('Failed to parse stored user:', error);
-        handleUnauthorized();
+    const init = async () => {
+      if (token && storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          setIsAuthenticated(true);
+          await fetchFavoritesCount();
+          await refreshCart();
+        } catch (error) {
+          console.error('Failed to parse stored user:', error);
+          handleUnauthorized();
+          setCartItems(loadGuestCart());
+        }
+      } else {
+        setCartItems(loadGuestCart());
       }
-    }
 
-    setLoading(false);
-  }, [fetchFavoritesCount, handleUnauthorized]);
+      setLoading(false);
+    };
 
-  useEffect(() => {
-    refreshCart();
-  }, [refreshCart]);
+    init();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = async (email, password) => {
     try {
@@ -257,16 +261,25 @@ export function AuthProvider({ children }) {
 
       const data = await loginResponse.json();
 
-      localStorage.setItem('authToken', data.token);
-      const userData = { name: data.name, email: data.email, permission: data.permission };
-      localStorage.setItem('user', JSON.stringify(userData));
+      const token = data.token ?? data.Token;
+      const name = data.name ?? data.Name;
+      const userEmail = data.email ?? data.Email;
+      const permission = data.permission ?? data.Permission;
 
+      if (!token) {
+        return { success: false, error: 'Érvénytelen szerver válasz' };
+      }
+
+      localStorage.setItem('authToken', token);
+      const userData = { name, email: userEmail, permission };
+      localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       setIsAuthenticated(true);
-      fetchFavoritesCount();
-      await refreshCart();
 
-      return { success: true, name: data.name };
+      fetchFavoritesCount().catch(() => {});
+      refreshCart().catch(() => {});
+
+      return { success: true, name };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'Nem sikerült csatlakozni a szerverhez' };
