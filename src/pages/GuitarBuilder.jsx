@@ -83,6 +83,7 @@ export default function GuitarBuilder() {
                 selectedFinish={selectedFinish}
                 selectedPickguard={selectedPickguard}
                 selectedNeck={selectedNeck}
+                selectedTestforma={selectedTestforma}
               />
             </div>
 

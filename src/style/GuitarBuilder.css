@@ -6,6 +6,11 @@
   position: relative;
   width: 420px;
   height: 900px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .guitar-layer {
@@ -14,6 +19,34 @@
   left: 0;
   top: 0;
   pointer-events: none;
+  object-fit: contain;
+}
+
+/* Finish (test/test forma) - alapvetően 100% */
+.guitar-finish {
+  max-width: 350px;
+  left: 10%;
+  top: 64.7%;
+  object-fit: contain;
+  transform: rotate(-90deg);
+}
+
+/* Pickguard - általában kisebb, mint a test */
+.guitar-pickguard {
+  width: 350px;
+  left: 10%;
+  top: 64.7%;
+  object-fit: contain;
+  transform: rotate(-90deg);
+}
+
+/* Nyak - a legkisebb, tetején helyezkedik el */
+.guitar-neck {
+  width: 200%;
+  left: -48%;
+  top: 38%;
+  object-fit: contain;
+  transform: rotate(-90deg);
 }
 
 .builder-options {
