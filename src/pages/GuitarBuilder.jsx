@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NavBar from "../components/NavBar";
 import BuilderCanvas from "../components/guitar-builder/BuilderCanvas";
 import BuilderOptions from "../components/guitar-builder/BuilderOptions";
@@ -9,6 +9,7 @@ import "../style/GuitarBuilder.css";
 export default function GuitarBuilder() {
   const { apiBase } = useAuth();
 
+  const canvasRef = useRef(null);
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
@@ -92,6 +93,7 @@ export default function GuitarBuilder() {
 
             <div className="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
               <BuilderCanvas
+                ref={canvasRef}
                 key={selectedTestforma?.id}
                 selectedFinish={selectedFinish}
                 selectedPickguard={selectedPickguard}
@@ -106,6 +108,7 @@ export default function GuitarBuilder() {
                 selectedFinish={selectedFinish}
                 selectedPickguard={selectedPickguard}
                 selectedNeck={selectedNeck}
+                canvasRef={canvasRef}
               />
             </div>
 

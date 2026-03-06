@@ -1,6 +1,6 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-export default function BuilderCanvas({ selectedFinish, selectedPickguard, selectedNeck, selectedTestforma }) {
+const BuilderCanvas = forwardRef(({ selectedFinish, selectedPickguard, selectedNeck, selectedTestforma }, ref) => {
   const hasAnything = selectedFinish || selectedPickguard || selectedNeck;
 
   // build a class list that includes the testforma slug so we can apply
@@ -12,7 +12,7 @@ export default function BuilderCanvas({ selectedFinish, selectedPickguard, selec
   }
 
   return (
-    <div className={classNames.join(" ")}>
+    <div ref={ref} className={classNames.join(" ")}>
       {!hasAnything && (
         <div className="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
           <i className="bi bi-music-note-beamed fs-1 mb-2" />
@@ -54,4 +54,7 @@ export default function BuilderCanvas({ selectedFinish, selectedPickguard, selec
       )}
     </div>
   );
-}
+});
+
+BuilderCanvas.displayName = "BuilderCanvas";
+export default BuilderCanvas;
