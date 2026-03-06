@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import html2canvas from "html2canvas";
 import { useAuth } from "../../context/AuthContext";
 
-export default function PriceBox({ selectedTestforma, selectedFinish, selectedPickguard, selectedNeck }) {
+export default function PriceBox({ selectedTestforma, selectedFinish, selectedPickguard, selectedNeck, canvasRef }) {
   const { isAuthenticated, apiBase, authHeaders, addToCart } = useAuth();
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const finishAr    = selectedFinish?.ar    ?? 0;
   const pickguardAr = selectedPickguard?.ar ?? 0;
@@ -53,6 +55,35 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
     }
   };
 
+  const handleExportImage = async () => {
+    if (!canvasRef?.current) {
+      alert("Az exportálás sikertelen");
+      return;
+    }
+
+    setExporting(true);
+    try {
+      const canvas = await html2canvas(canvasRef.current, {
+        backgroundColor: "#f8f8f8",
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `gitar_${selectedTestforma?.nev?.replace(/\s+/g, "_")}_${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Export hiba:", err);
+      alert("Nem sikerült letölteni a képet. Próbáld újra!");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="builder-price-box">
       <h4 className="fw-bold">Összesítő</h4>
@@ -96,6 +127,19 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
           : isComplete
             ? "Kosárba teszem"
             : "Válassz testformát és nyakat"}
+      </button>
+
+      <button
+        className="btn btn-outline-secondary w-100 mt-2"
+        onClick={handleExportImage}
+        disabled={!isComplete || exporting}
+        title={!isComplete ? "Válassz testformát és nyakat az exportáláshoz" : ""}
+      >
+        {exporting
+          ? <><span className="spinner-border spinner-border-sm me-2" />Exportálás...</>
+          : isComplete
+            ? "📥 Kép letöltése"
+            : "Nem elérhető"}
       </button>
 
       {!isAuthenticated && isComplete && (

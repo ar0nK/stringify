@@ -27,6 +27,13 @@ export default function BuilderOptions({
         </p>
       )}
 
+      {selectedTestforma && !selectedFinish && (
+        <p className="alert alert-info small py-2 px-3 mt-2">
+          <i className="bi bi-lightbulb me-2"></i>
+          Alapértelmezett opciókat már kiválasztottam. Bátran módosíthatod az alábbi lépésekben!
+        </p>
+      )}
+
       <OptionSelect
         label="2. Finish (szín)"
         value={selectedFinish?.id ?? ""}
