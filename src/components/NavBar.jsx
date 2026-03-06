@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router";
 import SearchBar from './SearchBar';
 import { useAuth } from '../context/AuthContext';
+import logotext from '../img/logotext.png';
+import logoimage from '../img/logoguitar.png';
 
 export default function NavBar() {
   const location = useLocation();
@@ -26,7 +28,12 @@ export default function NavBar() {
       <div className="position-fixed top-0 start-0 end-0" style={{ zIndex: 1030 }}>
         <nav className="navbar navbar-expand-lg bg-body">
           <div className="container-fluid">
-            <a className="navbar-brand" href="/">Stringify</a>
+            <div style={{paddingLeft:'1rem', verticalAlign:'center'}}>
+              <a className="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src={logoimage} alt="" style={{ height: '5rem' }} />
+                <img src={logotext} alt="Stringify" style={{ height: '2.8rem'}} />
+              </a>
+            </div>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
