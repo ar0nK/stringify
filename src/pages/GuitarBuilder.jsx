@@ -36,9 +36,22 @@ export default function GuitarBuilder() {
 
   const handleTestformaChange = (testforma) => {
     setSelectedTestforma(testforma);
-    setSelectedFinish(null);
-    setSelectedPickguard(null);
-    setSelectedNeck(null);
+    
+    // ha kiválasztodunk egy testformát, automatikusan betöltjük az első opciót
+    // mindegyikből, így nem üres a builder
+    if (testforma && options) {
+      const defaultFinish = options.finishek.find(f => f.testFormaId === testforma.id);
+      const defaultPickguard = options.pickguardok.find(p => p.testFormaId === testforma.id);
+      const defaultNeck = options.nyakak[0]; // az első nyak mindig elérhető
+      
+      setSelectedFinish(defaultFinish || null);
+      setSelectedPickguard(defaultPickguard || null);
+      setSelectedNeck(defaultNeck || null);
+    } else {
+      setSelectedFinish(null);
+      setSelectedPickguard(null);
+      setSelectedNeck(null);
+    }
   };
 
   return (
