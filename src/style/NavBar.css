@@ -15,3 +15,25 @@ hr{
     color: rgba(0, 0, 0, 0.5);
 }
 
+.logo-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'YourLogoFont', sans-serif;   /* use the same face as in logotext.png */
+  font-size: 1.15rem;
+  color: var(--bs-primary);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  color: rgba(255, 75, 75, 0.8);
+}
+
+.logo-nav-item img {
+  height: 2rem;       /* match the logo height */
+}
+
+.logo-nav-item:hover,
+.logo-nav-item:focus {
+  color: var(--bs-primary-dark);
+  text-decoration: none;
+}
+
