@@ -138,7 +138,7 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
         {exporting
           ? <><span className="spinner-border spinner-border-sm me-2" />Exportálás...</>
           : isComplete
-            ? "📥 Kép letöltése"
+            ? "Kép letöltése"
             : "Nem elérhető"}
       </button>
 

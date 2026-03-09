@@ -1,12 +1,28 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 
 const BuilderCanvas = forwardRef(({ selectedFinish, selectedPickguard, selectedNeck, selectedTestforma }, ref) => {
   const hasAnything = selectedFinish || selectedPickguard || selectedNeck;
 
-  // build a class list that includes the testforma slug so we can apply
-  // type-specific styling (tele vs strat, etc.)
-  const classNames = ["builder-canvas"];
-  if (selectedTestforma && selectedTestforma.nev) {
+  const [theme, setTheme] = useState(
+    () => document.documentElement.getAttribute("data-bs-theme") || localStorage.getItem("theme") || "light"
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const current = document.documentElement.getAttribute("data-bs-theme") || "light";
+      setTheme(current);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-bs-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const classNames = ["builder-canvas", `builder-canvas--${theme}`];
+  if (selectedTestforma?.nev) {
     const slug = selectedTestforma.nev.toLowerCase().replace(/\s+/g, "-");
     classNames.push(`testforma-${slug}`);
   }

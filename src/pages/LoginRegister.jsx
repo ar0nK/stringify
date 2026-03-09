@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../style/LoginRegister.css";
+import logo from "../img/logo.png";
 
 export default function LoginRegister() {
   const [searchParams] = useSearchParams();
@@ -87,6 +88,7 @@ export default function LoginRegister() {
     <div className="login-register-container min-vh-100 d-flex align-items-center justify-content-center">
       <div className="login-register-card card border-0 rounded-3">
         <div className="card-body p-5">
+          <img src={logo} style={{height: "6rem", marginBottom: "1rem"}} alt="" />
           <h2 className="login-register-heading text-center mb-4">
             {isLogin ? "Bejelentkezés" : "Regisztráció"}
           </h2>
@@ -108,7 +110,7 @@ export default function LoginRegister() {
                     required
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder="pelda@email.com"
+                    placeholder="példa@email.com"
                   />
                 </div>
 
@@ -120,6 +122,7 @@ export default function LoginRegister() {
                     required
                     value={jelszo}
                     onChange={(e) => setJelszo(e.target.value)}
+                    placeholder="********"
                   />
                 </div>
               </>
@@ -133,6 +136,7 @@ export default function LoginRegister() {
                     required
                     value={csaladnev}
                     onChange={(e) => setCsaladnev(e.target.value)}
+                    placeholder="Családnév"
                   />
                 </div>
 
@@ -144,6 +148,7 @@ export default function LoginRegister() {
                     required
                     value={keresztnev}
                     onChange={(e) => setKeresztnev(e.target.value)}
+                    placeholder="Keresztnév"
                   />
                 </div>
 
@@ -155,6 +160,7 @@ export default function LoginRegister() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder="példa@gmail.com"
                   />
                 </div>
 
@@ -166,6 +172,7 @@ export default function LoginRegister() {
                     required
                     value={jelszo}
                     onChange={(e) => setJelszo(e.target.value)}
+                    placeholder="********"
                   />
                 </div>
 
@@ -177,6 +184,7 @@ export default function LoginRegister() {
                     required
                     value={jelszo2}
                     onChange={(e) => setJelszo2(e.target.value)}
+                    placeholder="********"
                   />
                 </div>
               </>
