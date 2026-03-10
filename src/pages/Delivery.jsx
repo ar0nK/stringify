@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import '../style/Delivery.css'
 
 export default function Delivery() {
-  const { user, isAuthenticated, loading } = useAuth()
+  const { user, isAuthenticated, loading, placeOrder } = useAuth()
   const navigate = useNavigate()
   
   const [formData, setFormData] = useState({
@@ -17,6 +17,7 @@ export default function Delivery() {
 
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -41,7 +42,7 @@ export default function Delivery() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
@@ -77,11 +78,17 @@ export default function Delivery() {
       return
     }
 
-    // Szimulált sikeres küldés
-    console.log('Szállítási adatok:', formData)
+    setSubmitting(true)
+    const result = await placeOrder(formData)
+    setSubmitting(false)
+
+    if (!result.success) {
+      setError(result.error || 'Nem sikerült a rendelés')
+      return
+    }
+
     setSubmitted(true)
-    
-    // 3 másodperc után vissza a főoldalra
+
     setTimeout(() => {
       navigate('/')
     }, 3000)
@@ -174,7 +181,7 @@ export default function Delivery() {
                 <small className="form-text text-muted">Az email az Ön bejelentkezett fiókjáből származik</small>
               </div>
 
-              <button type="submit" className="btn btn-primary delivery-btn w-100 mt-4">
+              <button type="submit" className="btn btn-primary delivery-btn w-100 mt-4" disabled={submitting}>
                 Szállítási adatok megerősítése
               </button>
             </form>

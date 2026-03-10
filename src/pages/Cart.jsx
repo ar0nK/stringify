@@ -32,18 +32,23 @@ export default function Cart() {
               <div className="alert alert-secondary">A kosár üres.</div>
             )}
 
-            {cartItems.map(item => (
-              <div key={item.productId} className="row mb-3 align-items-center border-bottom pb-3">
+            {cartItems.map((item, index) => (
+              <div key={item.itemKey ?? `${item.productId}-${index}`} className="row mb-3 align-items-center border-bottom pb-3">
                 <div className="col-4">
                   <div className="d-flex flex-column align-items-center">
                     <img
                       src={item.image}
                       alt={item.title}
-                      style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        objectFit: 'cover',
+                        transform: item.isCustom ? 'rotate(90deg)' : undefined,
+                      }}
                       className="mb-2"
                     />
                     <p className="mb-1 text-center">{item.title}</p>
-                    <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => removeFromCart(item.productId)}>
+                    <button className="btn btn-link btn-sm p-0 text-danger" onClick={() => removeFromCart(item.itemKey ?? item.productId, item.isCustom)}>
                       Törlés
                     </button>
                   </div>
@@ -53,7 +58,7 @@ export default function Cart() {
                   <div className="d-flex align-items-center justify-content-center">
                     <button
                       className="btn btn-sm btn-outline-secondary"
-                      onClick={() => updateCartQuantity(item.productId, (item.quantity || 1) - 1)}
+                      onClick={() => updateCartQuantity(item.itemKey ?? item.productId, (item.quantity || 1) - 1, item.isCustom)}
                       disabled={(item.quantity || 1) <= 1}
                     >
                       -
@@ -61,7 +66,7 @@ export default function Cart() {
                     <span className="mx-3">{item.quantity}</span>
                     <button
                       className="btn btn-sm btn-outline-secondary"
-                      onClick={() => updateCartQuantity(item.productId, (item.quantity || 1) + 1)}
+                      onClick={() => updateCartQuantity(item.itemKey ?? item.productId, (item.quantity || 1) + 1, item.isCustom)}
                     >
                       +
                     </button>

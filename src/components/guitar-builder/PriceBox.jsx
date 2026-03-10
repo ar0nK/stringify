@@ -14,6 +14,18 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
 
   const isComplete = selectedTestforma && selectedNeck;
 
+  const getCanvasImageDataUrl = async () => {
+    if (!canvasRef?.current) return "";
+    const canvas = await html2canvas(canvasRef.current, {
+      backgroundColor: "#f8f8f8",
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+    });
+
+    return canvas.toDataURL("image/png");
+  };
+
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       alert("A gitár kosárba helyezéséhez be kell jelentkezned!");
@@ -37,16 +49,19 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
 
       const data = await res.json();
 
+      const imageDataUrl = await getCanvasImageDataUrl();
+
       await addToCart({
-        id:            `egyedi-${data.id}`,
+        isCustom:      true,
+        customId:      data.id,
         title:         `Egyedi gitár (${selectedTestforma.nev})`,
         price:         total,
-        image:         selectedFinish?.kepUrl ?? "",
+        image:         imageDataUrl || (selectedFinish?.kepUrl ?? ""),
         egyediGitarId: data.id,
         isAvailable:   true,
       });
 
-      alert(`Egyedi gitár sikeresen kosárba helyezve! (ID: ${data.id})`);
+      alert("Egyedi gitár sikeresen kosárba helyezve!");
     } catch (err) {
       console.error(err);
       alert("Hiba történt a mentés során. Kérjük, próbáld újra.");
@@ -63,15 +78,8 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
 
     setExporting(true);
     try {
-      const canvas = await html2canvas(canvasRef.current, {
-        backgroundColor: "#f8f8f8",
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      });
-
       const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
+      link.href = await getCanvasImageDataUrl();
       link.download = `gitar_${selectedTestforma?.nev?.replace(/\s+/g, "_")}_${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
