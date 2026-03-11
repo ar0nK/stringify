@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchBar from './SearchBar';
 import { useAuth } from '../context/AuthContext';
 import logotext from '../img/logotext.png';
