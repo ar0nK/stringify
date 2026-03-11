@@ -1,5 +1,34 @@
+:root,
+[data-bs-theme="light"] {
+  --delivery-container-bg: #f8f9fa;
+  --delivery-card-bg: #ffffff;
+  --delivery-card-shadow: rgba(0, 0, 0, 0.08);
+  --delivery-heading-color: #2c3e50;
+  --delivery-label-color: #5a6c7d;
+  --delivery-input-bg: #f0f2f5;
+  --delivery-input-border: #e0e3e7;
+  --delivery-input-focus-bg: #ffffff;
+  --delivery-input-color: #212529;
+  --delivery-input-disabled-bg: #e9ecef;
+  --delivery-input-disabled-color: #6c757d;
+}
+
+[data-bs-theme="dark"] {
+  --delivery-container-bg: #13151f;
+  --delivery-card-bg: #1e2130;
+  --delivery-card-shadow: rgba(0, 0, 0, 0.35);
+  --delivery-heading-color: #f0f2f5;
+  --delivery-label-color: #c9cdd6;
+  --delivery-input-bg: #262a3a;
+  --delivery-input-border: #3a3f55;
+  --delivery-input-focus-bg: #2e3348;
+  --delivery-input-color: #e8eaf0;
+  --delivery-input-disabled-bg: #1a1d2b;
+  --delivery-input-disabled-color: #6b7280;
+}
+
 .delivery-container {
-  background-color: #f8f9fa;
+  background-color: var(--delivery-container-bg);
   min-height: 100vh;
 }
 
@@ -12,10 +41,10 @@
 }
 
 .delivery-card {
-  background-color: white;
+  background-color: var(--delivery-card-bg);
   border-radius: 8px;
   padding: 40px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px var(--delivery-card-shadow);
   width: 100%;
   max-width: 500px;
 }
@@ -23,37 +52,38 @@
 .delivery-heading {
   font-family: Georgia, serif;
   font-weight: 400;
-  color: #2c3e50;
+  color: var(--delivery-heading-color);
   font-size: 32px;
   margin-bottom: 30px;
   text-align: center;
 }
 
 .delivery-label {
-  color: #5a6c7d;
+  color: var(--delivery-label-color);
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 8px;
 }
 
 .delivery-input {
-  background-color: #f0f2f5;
+  background-color: var(--delivery-input-bg) !important;
+  color: var(--delivery-input-color) !important;
   font-size: 15px;
   transition: all 0.2s;
-  border: 1px solid #e0e3e7 !important;
+  border: 1px solid var(--delivery-input-border) !important;
   padding: 12px 15px;
 }
 
 .delivery-input:focus {
-  background-color: #ffffff;
+  background-color: var(--delivery-input-focus-bg) !important;
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
   outline: none;
 }
 
 .delivery-input:disabled {
-  background-color: #e9ecef;
-  color: #6c757d;
+  background-color: var(--delivery-input-disabled-bg) !important;
+  color: var(--delivery-input-disabled-color) !important;
   cursor: not-allowed;
 }
 
