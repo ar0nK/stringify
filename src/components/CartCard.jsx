@@ -1,4 +1,3 @@
-
 const CartCard = ({
     id,
     productId,

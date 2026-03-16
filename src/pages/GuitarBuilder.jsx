@@ -38,12 +38,10 @@ export default function GuitarBuilder() {
   const handleTestformaChange = (testforma) => {
     setSelectedTestforma(testforma);
     
-    // ha kiválasztodunk egy testformát, automatikusan betöltjük az első opciót
-    // mindegyikből, így nem üres a builder
     if (testforma && options) {
       const defaultFinish = options.finishek.find(f => f.testFormaId === testforma.id);
       const defaultPickguard = options.pickguardok.find(p => p.testFormaId === testforma.id);
-      const defaultNeck = options.nyakak[0]; // az első nyak mindig elérhető
+      const defaultNeck = options.nyakak[0];
       
       setSelectedFinish(defaultFinish || null);
       setSelectedPickguard(defaultPickguard || null);

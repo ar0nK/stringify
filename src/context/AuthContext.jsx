@@ -402,7 +402,7 @@ export function AuthProvider({ children }) {
     };
 
     init();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const login = async (email, password) => {
     try {

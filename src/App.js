@@ -6,12 +6,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import PageSelector from './pages/PageSelector';
 import GuitarBuilder from './pages/GuitarBuilder';
 import Store from './pages/Store';
-import Settings from './pages/Settings';
 import Product from './pages/Product';
 import SavedProducts from './pages/SavedProducts';
 import Cart from './pages/Cart';
 import LoginRegister from './pages/LoginRegister';
-import Profile from './pages/Profile';
 import Delivery from './pages/Delivery';
 
 function App() {
@@ -22,11 +20,9 @@ function App() {
           <Routes>
             <Route path="/" element={<PageSelector />} />
             <Route path="/store" element={<Store />} />
-            <Route path="/settings" element={<Settings />} />
             <Route path="/product_info/:id" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<LoginRegister />} />
-            <Route path="/profile" element={<Profile />} />
 
             <Route
               path="/delivery" element={
