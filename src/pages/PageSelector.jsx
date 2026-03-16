@@ -35,14 +35,14 @@ export default function PageSelector() {
 
   return (
     <div className="px-2 bg-body text-body" style={{ minHeight: '100vh', position: 'relative' }}>
-      <button
-        className="btn p-0 border-0 bg-transparent nav-link position-absolute"
-        style={{ top: '1.25rem', right: '1.5rem' }}
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      >
-        <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
-      </button>
-
+      <div className="position-absolute d-flex align-items-center gap-4" style={{ top: '1.25rem', right: '1.5rem' }}>
+        {!isAuthenticated && (
+          <Link className="btn btn-primary" to="/login?register=true">Regisztrálás</Link>
+        )}
+        <button className="btn p-0 border-0 bg-transparent nav-link" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+          <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
+        </button>
+      </div>
       <div className="text-center pt-5 pb-2">
         <img src={logo} alt="Stringify" style={{ height: '10rem', width: 'auto' }} />
       </div>
@@ -51,7 +51,7 @@ export default function PageSelector() {
         <div className='row row-cols-1 row-cols-md-2 g-4'>
           <div className='col'>
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
-              <img className="icon-image rounded-3" src={webshopimg} alt="" />
+              <a href="/store"><img className="icon-image rounded-3" src={webshopimg} alt="" /></a>
               <h4>Webshop</h4>
               <h6>Fedezd fel a Webshop gitárkínálatát, ahol a kezdő szettektől a profi hangszerekig, széles választékban gitárokat találsz.</h6>
               <Link to="/store"><button style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button></Link>
@@ -59,7 +59,7 @@ export default function PageSelector() {
           </div>
           <div className='col'>
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
-              <img className="icon-image rounded-3" src={guitarbuilderimg} alt="" />
+              <a href="/guitar-builder"><img className="icon-image rounded-3" src={guitarbuilderimg} alt="" /></a>
               <h4>Gitárépítő</h4>
               <h6>Tervezd meg álomgitárodat a Gitárépítő oldalon: válassz formát, hardvert és elektronikát, és alkoss egyedi hangszert.</h6>
               <button onClick={handleGuitarBuilderClick} style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button>

@@ -25,7 +25,7 @@ export default function LoginRegister() {
   useEffect(() => {
     const previousTheme = document.documentElement.getAttribute("data-bs-theme");
     document.documentElement.setAttribute("data-bs-theme", "light");
-    
+
     return () => {
       if (previousTheme) {
         document.documentElement.setAttribute("data-bs-theme", previousTheme);
@@ -70,6 +70,7 @@ export default function LoginRegister() {
           setJelszo2("");
 
           setTimeout(() => {
+            setMessage("");
             setIsLogin(true);
           }, 2000);
         } else {
@@ -86,13 +87,13 @@ export default function LoginRegister() {
 
   return (
     <div className="login-register-container min-vh-100 d-flex align-items-center justify-content-center">
-      <div className="login-register-card card border-0 rounded-3">
-        <div className="card-body p-5">
-          <img src={logo} style={{height: "6rem", marginBottom: "1rem"}} alt="" />
-          <h2 className="login-register-heading text-center mb-4">
+      <div className="login-register-card card border-0 rounded-3" style={{ width: "35rem" }}>
+        <div className="card-body p-4">
+          <a href="/"><img src={logo} style={{ height: "8rem", marginBottom: "1rem" }} alt="" /></a>
+          <h2 className="login-register-heading text-center mb-4" style={{ paddingTop: "1rem" }}>
             {isLogin ? "Bejelentkezés" : "Regisztráció"}
           </h2>
-
+          <hr />
           {(error || message) && (
             <div className={`alert ${error ? "alert-danger" : "alert-success"}`}>
               {error || message}
@@ -103,99 +104,116 @@ export default function LoginRegister() {
             {isLogin ? (
               <>
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Email cím</label>
-                  <input
-                    type="email"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder="példa@email.com"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Email cím</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-envelope login-register-input-icon"></i>
+                    <input
+                      type="email"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      placeholder="példa@email.com"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Jelszó</label>
-                  <input
-                    type="password"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={jelszo}
-                    onChange={(e) => setJelszo(e.target.value)}
-                    placeholder="********"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Jelszó</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-lock login-register-input-icon"></i>
+                    <input
+                      type="password"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={jelszo}
+                      onChange={(e) => setJelszo(e.target.value)}
+                      placeholder="********"
+                    />
+                  </div>
                 </div>
               </>
             ) : (
               <>
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Családnév</label>
-                  <input
-                    type="text"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={csaladnev}
-                    onChange={(e) => setCsaladnev(e.target.value)}
-                    placeholder="Családnév"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Családnév</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-person login-register-input-icon"></i>
+                    <input
+                      type="text"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={csaladnev}
+                      onChange={(e) => setCsaladnev(e.target.value)}
+                      placeholder="Családnév"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Keresztnév</label>
-                  <input
-                    type="text"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={keresztnev}
-                    onChange={(e) => setKeresztnev(e.target.value)}
-                    placeholder="Keresztnév"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Keresztnév</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-person login-register-input-icon"></i>
+                    <input
+                      type="text"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={keresztnev}
+                      onChange={(e) => setKeresztnev(e.target.value)}
+                      placeholder="Keresztnév"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Email cím</label>
-                  <input
-                    type="email"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="példa@gmail.com"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Email cím</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-envelope login-register-input-icon"></i>
+                    <input
+                      type="email"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="példa@gmail.com"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="login-register-label form-label mb-2">Jelszó</label>
-                  <input
-                    type="password"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={jelszo}
-                    onChange={(e) => setJelszo(e.target.value)}
-                    placeholder="********"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Jelszó</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-lock login-register-input-icon"></i>
+                    <input
+                      type="password"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={jelszo}
+                      onChange={(e) => setJelszo(e.target.value)}
+                      placeholder="********"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-4">
-                  <label className="login-register-label form-label mb-2">Jelszó megerősítése</label>
-                  <input
-                    type="password"
-                    className="login-register-input form-control rounded-2 py-2"
-                    required
-                    value={jelszo2}
-                    onChange={(e) => setJelszo2(e.target.value)}
-                    placeholder="********"
-                  />
+                  <label className="login-register-label form-label mb-2 w-100 text-start">Jelszó megerősítése</label>
+                  <div className="login-register-input-wrapper">
+                    <i className="bi bi-lock-fill login-register-input-icon"></i>
+                    <input
+                      type="password"
+                      className="login-register-input form-control rounded-2 py-2"
+                      required
+                      value={jelszo2}
+                      onChange={(e) => setJelszo2(e.target.value)}
+                      placeholder="********"
+                    />
+                  </div>
                 </div>
               </>
             )}
 
-            <div className="d-grid mt-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="login-register-button btn text-white py-2 rounded-2"
-              >
+            <div className="d-grid mt-4" style={{ paddingTop: "2rem" }}>
+              <button type="submit" disabled={loading} className="login-register-button btn text-white py-2 rounded-2">
                 {loading ? "Folyamatban..." : isLogin ? "Bejelentkezés" : "Regisztráció"}
               </button>
             </div>

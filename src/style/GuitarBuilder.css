@@ -6,7 +6,7 @@
   position: relative;
   width: 420px;
   height: 900px;
-  background: #f8f8f8;
+  background: #f0f6fc;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -67,7 +67,7 @@
 }
 
 .builder-canvas--light {
-  background-color: #ffffff;
+  background-color: #f0f6fc;
   border-color: #dee2e6;
 }
 

@@ -1,10 +1,11 @@
 .login-register-container {
-  background-color: #f8f9fa;
+  background-color: #dde1e5;
 }
 
 .login-register-card {
   width: 420px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background-color: #f4f6f8 !important;
 }
 
 .login-register-heading {
@@ -28,7 +29,7 @@
 }
 
 .login-register-input:focus {
-  background-color: #ffffff;
+  background-color: #f8fafc;
   border-color: #2c3e50 !important;
   box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.15) !important;
 }
@@ -53,4 +54,22 @@
 
 .login-register-toggle:hover {
   color: #357abd;
+}
+
+.login-register-input-wrapper {
+  position: relative;
+}
+
+.login-register-input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.login-register-input-wrapper .login-register-input {
+  padding-left: 2.25rem;
 }
