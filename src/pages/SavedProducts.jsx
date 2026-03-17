@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/Card.jsx'
 import NavBar from '../components/NavBar.jsx'
+import Footer from '../components/Footer.jsx'
 import Filters from '../components/Filters.jsx'
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -108,6 +109,7 @@ export default function SavedProducts() {
             <span className="visually-hidden">Betöltés...</span>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -167,6 +169,7 @@ export default function SavedProducts() {
           </section>
         </div>
       </div>
-    </div>
+    <Footer />
+  </div>
   )
 }

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import NavBar from '../components/NavBar'
 import Card from '../components/Card'
+import Footer from '../components/Footer'
 import { Star, ChevronLeft, ChevronRight, X, ZoomIn, Heart } from 'lucide-react'
 import '../style/Product.css'
+
 
 export default function Product() {
   const { id } = useParams()
@@ -19,7 +21,8 @@ export default function Product() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [toast, setToast] = useState(null)
 
-  const [showModal, setShowModal] = useState(false)
+  const longDescriptionRef = useRef(null)
+
   const [showLightbox, setShowLightbox] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
@@ -269,7 +272,7 @@ export default function Product() {
             )}
             <button
               className='btn btn-link p-0 text-secondary text-decoration-underline mb-3'
-              onClick={() => setShowModal(true)}
+              onClick={() => longDescriptionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >
               Bővebb leírás
             </button>
@@ -277,12 +280,9 @@ export default function Product() {
             <h5 className={product.isAvailable ? "text-success" : "text-danger"}>
               {product.isAvailable ? "Jelenleg raktáron" : "Nincs raktáron"}
             </h5>
-            <button className='btn btn-danger btn-lg w-100 mt-4 rounded' onClick={handleAddToCart}>
-              Kosárba
-            </button>
-          </div>
+            {product.isAvailable ? <button className='btn btn-danger btn-lg w-100 mt-4 rounded' onClick={handleAddToCart}>Kosárba</button> : <button className='btn btn-secondary btn-lg w-100 mt-4 rounded' disabled>Kosárba</button>}
         </div>
-
+      </div>
         <div className="row">
           <div className="col-12">
             <hr className='mt-5 mb-4' />
@@ -346,6 +346,16 @@ export default function Product() {
         </div>
       )}
 
+      {product.longDescription && (
+        <div className="container mb-5" ref={longDescriptionRef} style={{ textAlign: 'left' }}>
+          <hr />
+          <h4 className="mb-3">Részletes leírás</h4>
+          <p className="text-secondary" style={{ whiteSpace: 'pre-line', lineHeight: '1.8', textAlign: 'left' }}>
+            {product.longDescription}
+          </p>
+        </div>
+      )}
+
       {showLightbox && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center lightbox-overlay"
@@ -389,25 +399,7 @@ export default function Product() {
           </div>
         </div>
       )}
-
-      {showModal && (
-        <div className="modal show d-block modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h5 className="modal-title">Részletes leírás - {product.title}</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-              <div className="modal-body modal-body-scrollable">
-                {product.longDescription}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Bezárás</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Footer />
     </div>
   )
 }

@@ -10,6 +10,7 @@ const Card = ({
   title,
   rating,
   reviewCount,
+  longDescription,
   previewDescription,
   isAvailable,
   price,
@@ -23,6 +24,8 @@ const Card = ({
 
   const formatPrice = (price) => price.toLocaleString('hu-HU');
   const thumbnail = images?.[0];
+
+  const displayDescription = longDescription?.split(/(?<=[.!?])\s+/)[0] ?? previewDescription;
 
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
@@ -62,7 +65,7 @@ const Card = ({
           </div>
         )}
 
-        <p className="product-description">{previewDescription}</p>
+        <p className="product-description">{displayDescription}</p>
 
         <div className="product-footer">
           <span className="product-price">{formatPrice(price)} Ft</span>

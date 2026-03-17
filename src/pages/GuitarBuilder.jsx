@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import BuilderCanvas from "../components/guitar-builder/BuilderCanvas";
 import BuilderOptions from "../components/guitar-builder/BuilderOptions";
 import PriceBox from "../components/guitar-builder/PriceBox";
@@ -114,6 +115,7 @@ export default function GuitarBuilder() {
         )}
 
       </div>
+      <Footer />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/Footer";
 import "../style/LoginRegister.css";
 import logo from "../img/logo.png";
 
@@ -236,6 +237,7 @@ export default function LoginRegister() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

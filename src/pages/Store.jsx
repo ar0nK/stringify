@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card.jsx";
 import NavBar from "../components/NavBar.jsx";
+import Footer from "../components/Footer.jsx";
 import Filters from "../components/Filters.jsx";
 import { useAuth } from "../context/AuthContext";
 import { Heart, ShoppingCart } from "lucide-react";
@@ -153,7 +154,7 @@ export default function Store() {
                       title={guitar.title}
                       rating={guitar.rating}
                       reviewCount={guitar.reviewCount}
-                      shortDescription={guitar.shortDescription}
+                      shortDescription={guitar.longDescription?.split(/(?<=[.!?])\s+/)[0] ?? guitar.shortDescription}
                       longDescription={guitar.longDescription}
                       previewDescription={guitar.previewDescription}
                       isAvailable={guitar.isAvailable}
@@ -169,6 +170,7 @@ export default function Store() {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
