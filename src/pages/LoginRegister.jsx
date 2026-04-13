@@ -237,7 +237,6 @@ export default function LoginRegister() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
