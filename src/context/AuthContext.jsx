@@ -98,7 +98,10 @@ export function AuthProvider({ children }) {
       const res = await fetch(`${apiBase}/api/Cart`, {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
-      if (res.status === 401) return [];
+      if (res.status === 401) {
+        handleUnauthorized();
+        return [];
+      }
       if (!res.ok) return [];
       const data = await res.json();
       return (data.items || []).map(i => {
@@ -123,7 +126,7 @@ export function AuthProvider({ children }) {
       console.error('Failed to fetch cart:', error);
       return [];
     }
-  }, [apiBase]);
+  }, [apiBase, handleUnauthorized]);
 
   const fetchFavoritesCount = useCallback(async () => {
     const token = localStorage.getItem('authToken');
@@ -132,7 +135,10 @@ export function AuthProvider({ children }) {
       const res = await fetch(`${apiBase}/api/KedvencTermek`, {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
-      if (res.status === 401) return;
+      if (res.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setFavoritesCount(data.length);
@@ -140,7 +146,7 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to fetch favorites count:', e);
     }
-  }, [apiBase]);
+  }, [apiBase, handleUnauthorized]);
 
   const refreshCart = useCallback(async () => {
     const token = localStorage.getItem('authToken');

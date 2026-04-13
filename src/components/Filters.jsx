@@ -7,7 +7,7 @@ export default function Filters({ onFiltersChange, products = [] }) {
 
   const [sortBy, setSortBy] = useState(null);
   const [priceEnabled, setPriceEnabled] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen] = useState(true);
 
   const prices = products
     .map(p => p.price ?? p.ar)
@@ -76,8 +76,9 @@ export default function Filters({ onFiltersChange, products = [] }) {
     onFiltersChange(filtered);
   };
 
-  const minPercent = ((priceRange[0] - minAr) / (maxAr - minAr)) * 100;
-  const maxPercent = ((priceRange[1] - minAr) / (maxAr - minAr)) * 100;
+  const rangeSpan = Math.max(maxAr - minAr, 1);
+  const minPercent = ((priceRange[0] - minAr) / rangeSpan) * 100;
+  const maxPercent = ((priceRange[1] - minAr) / rangeSpan) * 100;
 
   return (
     <div className="p-3 rounded border bg-body-tertiary">

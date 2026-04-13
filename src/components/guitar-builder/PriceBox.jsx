@@ -20,7 +20,7 @@ export default function PriceBox({ selectedTestforma, selectedFinish, selectedPi
       backgroundColor: "#f8f8f8",
       scale: 2,
       useCORS: true,
-      allowTaint: true,
+      allowTaint: false,
     });
 
     return canvas.toDataURL("image/png");
