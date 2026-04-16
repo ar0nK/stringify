@@ -90,7 +90,7 @@ export default function Product() {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
-      navigate('/login?register=true')
+      navigate('/login')
       return
     }
 
@@ -119,7 +119,7 @@ export default function Product() {
           return newFavorites
         })
       } else if (res.status === 401) {
-        navigate('/login?register=true')
+        console.warn('Favorite toggle returned 401. Preserving auth state.')
       }
     } catch (error) {
       console.error('Error toggling favorite:', error)
@@ -128,7 +128,7 @@ export default function Product() {
 
   const toggleRelatedFavorite = async (productId) => {
     if (!isAuthenticated) {
-      navigate('/login?register=true')
+      navigate('/login')
       return
     }
 

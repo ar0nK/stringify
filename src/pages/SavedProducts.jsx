@@ -17,7 +17,7 @@ export default function SavedProducts() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
+      navigate('/login', { state: { from: { pathname: '/saved-products' } } });
       return;
     }
 
@@ -37,7 +37,13 @@ export default function SavedProducts() {
 
         if (!res.ok) {
           if (res.status === 401) {
-            navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
+            if (!cancelled) {
+              setSavedProducts([]);
+              setFilteredProducts([]);
+              setFavorites(new Set());
+              setFavoritesCount(0);
+              setError('A kedvencek most nem elérhetők. Kérlek jelentkezz be újra, ha ez továbbra is fennáll.');
+            }
             return;
           }
           throw new Error('Nem sikerült betölteni a kedvenc termékeket');
@@ -90,7 +96,7 @@ export default function SavedProducts() {
           });
         }
       } else if (res.status === 401) {
-        navigate('/login?register=true', { state: { from: { pathname: '/saved-products' } } });
+        setError('A kedvencek módosítása most nem sikerült. Kérlek próbáld újra.');
       } else {
         const errorData = await res.text();
         console.error("Toggle favorite failed:", errorData);

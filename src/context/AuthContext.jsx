@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { createContext, useState, useEffect, useContext, useCallback, useRef } from 'react';
 
 const AuthContext = createContext();
 
@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
+  const initializingRef = useRef(false);
   const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const GUEST_CART_KEY = 'cart_guest';
 
@@ -91,7 +92,7 @@ export function AuthProvider({ children }) {
     return [...merged, ...missingLocal];
   }, [loadGuestCart]);
 
-  const fetchCartFromServer = useCallback(async () => {
+  const fetchCartFromServer = useCallback(async ({ silent = false } = {}) => {
     const token = localStorage.getItem('authToken');
     if (!token) return [];
     try {
@@ -99,7 +100,9 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 401) {
-        handleUnauthorized();
+        if (!silent) {
+          console.warn('Cart request returned 401. Keeping local auth state and skipping cart sync.');
+        }
         return [];
       }
       if (!res.ok) return [];
@@ -126,9 +129,9 @@ export function AuthProvider({ children }) {
       console.error('Failed to fetch cart:', error);
       return [];
     }
-  }, [apiBase, handleUnauthorized]);
+  }, [apiBase]);
 
-  const fetchFavoritesCount = useCallback(async () => {
+  const fetchFavoritesCount = useCallback(async ({ silent = false } = {}) => {
     const token = localStorage.getItem('authToken');
     if (!token) return;
     try {
@@ -136,7 +139,10 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 401) {
-        handleUnauthorized();
+        if (!silent) {
+          console.warn('Favorites request returned 401. Keeping local auth state and clearing favorite count.');
+        }
+        setFavoritesCount(0);
         return;
       }
       if (res.ok) {
@@ -146,12 +152,12 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to fetch favorites count:', e);
     }
-  }, [apiBase, handleUnauthorized]);
+  }, [apiBase]);
 
-  const refreshCart = useCallback(async () => {
+  const refreshCart = useCallback(async ({ silent = false } = {}) => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      const serverItems = await fetchCartFromServer();
+      const serverItems = await fetchCartFromServer({ silent });
       setCartItems(mergeCartItems(serverItems));
       return;
     }
@@ -162,7 +168,6 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('authToken');
     const quantity = Math.max(1, Number(qty) || 1);
     const isCustom = Boolean(product.isCustom || product.customId || product.egyediGitarId);
-
     const customId = product.customId ?? product.egyediGitarId ?? null;
 
     if (token && isCustom) {
@@ -381,34 +386,46 @@ export function AuthProvider({ children }) {
   const cartCount = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const storedUser = localStorage.getItem('user');
+    // Guard against React StrictMode double-invocation
+    if (initializingRef.current) return;
+    initializingRef.current = true;
+
+    let cancelled = false;
 
     const init = async () => {
+      const token = localStorage.getItem('authToken');
+      const storedUser = localStorage.getItem('user');
+
       let userData = null;
       if (token && storedUser) {
         try {
           userData = JSON.parse(storedUser);
-          setUser(userData);
-          setIsAuthenticated(true);
+          if (!cancelled) {
+            setUser(userData);
+            setIsAuthenticated(true);
+          }
         } catch (error) {
           console.error('Failed to parse stored user:', error);
           handleUnauthorized();
         }
       }
 
+      if (cancelled) return;
+
       if (userData) {
-        await fetchFavoritesCount();
-        await refreshCart();
+        await fetchFavoritesCount({ silent: true });
+        await refreshCart({ silent: true });
       } else {
         setCartItems(loadGuestCart());
       }
 
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     };
 
     init();
-  }, []);
+
+    return () => { cancelled = true; };
+  }, [fetchFavoritesCount, handleUnauthorized, loadGuestCart, refreshCart]);
 
   const login = async (email, password) => {
     try {
@@ -453,8 +470,17 @@ export function AuthProvider({ children }) {
       setUser(userData);
       setIsAuthenticated(true);
 
-      fetchFavoritesCount().catch(() => {});
-      refreshCart().catch(() => {});
+      try {
+        await fetchFavoritesCount({ silent: true });
+      } catch (e) {
+        console.warn('Could not load favorites after login:', e);
+      }
+
+      try {
+        await refreshCart({ silent: true });
+      } catch (e) {
+        console.warn('Could not load cart after login:', e);
+      }
 
       return { success: true, name };
     } catch (error) {

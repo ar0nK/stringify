@@ -82,7 +82,7 @@ export default function Store() {
 
   const toggleFavorite = async (productId) => {
     if (!isAuthenticated) {
-      navigate('/login?register=true');
+      navigate('/login');
       return;
     }
 
@@ -108,7 +108,7 @@ export default function Store() {
           data.isFavorite ? 'success' : 'info'
         );
       } else if (res.status === 401) {
-        navigate('/login?register=true');
+        console.warn('Favorite toggle returned 401. Preserving auth state.');
       }
     } catch {}
   };

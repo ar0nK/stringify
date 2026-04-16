@@ -32,7 +32,7 @@ const Card = ({
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      navigate('/login?register=true');
+      navigate('/login');
       return;
     }
 
