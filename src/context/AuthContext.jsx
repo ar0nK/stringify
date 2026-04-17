@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const GUEST_CART_KEY = 'cart_guest';
@@ -377,6 +378,34 @@ export function AuthProvider({ children }) {
     localStorage.setItem(LAST_BILLING_KEY, JSON.stringify(billingData ?? {}));
   }, []);
 
+  const fetchOrders = useCallback(async ({ silent = false } = {}) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return [];
+    try {
+      const res = await fetch(`${apiBase}/api/Rendeles`, {
+        headers: authHeaders()
+      });
+      if (res.status === 401) {
+        console.warn('[Orders] Fetching orders returned 401 — skipping.');
+        return [];
+      }
+      if (!res.ok) {
+        console.error(`[Orders] Failed to fetch orders: HTTP ${res.status}`);
+        return [];
+      }
+      const data = await res.json();
+      return data || [];
+    } catch (error) {
+      console.error('[Orders] Exception while fetching orders:', error);
+      return [];
+    }
+  }, [apiBase, authHeaders]);
+
+  const refreshOrders = useCallback(async ({ silent = false } = {}) => {
+    const serverOrders = await fetchOrders({ silent });
+    setOrders(serverOrders);
+  }, [fetchOrders]);
+
   const placeOrder = useCallback(async (deliveryData) => {
     const token = localStorage.getItem('authToken');
     if (!token) return { success: false, error: 'Kérjük, jelentkezz be!' };
@@ -403,6 +432,7 @@ export function AuthProvider({ children }) {
       localStorage.removeItem(GUEST_CART_KEY);
       localStorage.setItem(LAST_BILLING_KEY, JSON.stringify(deliveryData ?? {}));
       await refreshCart();
+      await refreshOrders();
 
       const data = await res.json();
       return { success: true, orderId: data.orderId, total: data.total };
@@ -410,7 +440,7 @@ export function AuthProvider({ children }) {
       console.error('[Order] Exception during placeOrder:', error);
       return { success: false, error: 'Nem sikerült csatlakozni a szerverhez' };
     }
-  }, [apiBase, authHeaders, handleUnauthorized, refreshCart]);
+  }, [apiBase, authHeaders, handleUnauthorized, refreshCart, refreshOrders]);
 
   const cartCount = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
 
@@ -518,6 +548,12 @@ export function AuthProvider({ children }) {
         console.warn('[Auth] Could not load cart after login:', e);
       }
 
+      try {
+        await refreshOrders({ silent: true });
+      } catch (e) {
+        console.warn('[Auth] Could not load orders after login:', e);
+      }
+
       return { success: true, name };
     } catch (error) {
       console.error('[Auth] Exception during login:', error);
@@ -589,6 +625,8 @@ export function AuthProvider({ children }) {
     updateUserProfile,
     saveBillingAddress,
     placeOrder,
+    orders,
+    refreshOrders,
   };
 
   return (

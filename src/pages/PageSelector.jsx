@@ -39,6 +39,7 @@ export default function PageSelector() {
         {!isAuthenticated && (
           <Link className="btn btn-primary" to="/login?register=true">Regisztrálás</Link>
         )}
+                              
         <button className="btn p-0 border-0 bg-transparent nav-link" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
         </button>
@@ -53,15 +54,15 @@ export default function PageSelector() {
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
               <a href="/store"><img className="icon-image rounded-3" src={webshopimg} alt="" /></a>
               <h4>Webshop</h4>
-              <h6>Fedezd fel a Webshop gitárkínálatát, ahol a kezdő szettektől a profi hangszerekig, széles választékban gitárokat találsz.</h6>
+              <h6>Fedezd fel a webshop hangszerkínálatát, ahol széles választékban találhatsz gitárokat.</h6>
               <Link to="/store"><button style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button></Link>
             </div>
           </div>
           <div className='col'>
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
               <a href="/guitar-builder"><img className="icon-image rounded-3" src={guitarbuilderimg} alt="" /></a>
-              <h4>Gitárépítő</h4>
-              <h6>Tervezd meg álomgitárodat a Gitárépítő oldalon: válassz formát, hardvert és elektronikát, és alkoss egyedi hangszert.</h6>
+              <h4>Gitár építő</h4>
+              <h6>Tervezd meg álomgitárodat a gitár építő oldalon: válassz formát, test és pickguard színt, és alkoss egyedi hangszert.</h6>
               <button onClick={handleGuitarBuilderClick} style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button>
             </div>
           </div>
