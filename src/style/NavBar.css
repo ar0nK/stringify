@@ -37,3 +37,7 @@ hr{
   text-decoration: none;
 }
 
+.container {
+    min-height: auto;
+    display: block;
+}

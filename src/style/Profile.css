@@ -2,7 +2,6 @@
 [data-bs-theme="light"] {
   --profile-container-bg: #f8f9fa;
   --profile-card-bg: #ffffff;
-  --profile-card-shadow: rgba(0, 0, 0, 0.08);
   --profile-heading-color: #2c3e50;
   --profile-label-color: #6c757d;
   --profile-value-bg: #f0f2f5;
@@ -18,21 +17,20 @@
 }
 
 [data-bs-theme="dark"] {
-  --profile-container-bg: #13151f;
-  --profile-card-bg: #1e2130;
-  --profile-card-shadow: rgba(0, 0, 0, 0.35);
-  --profile-heading-color: #f0f2f5;
-  --profile-label-color: #c9cdd6;
-  --profile-value-bg: #262a3a;
-  --profile-value-border: #3a3f55;
-  --profile-value-color: #e8eaf0;
-  --profile-divider: #2e3347;
-  --profile-avatar-bg: #262a3a;
-  --profile-avatar-color: #9ca3af;
-  --profile-btn-border: #3a3f55;
-  --profile-btn-color: #c9cdd6;
+  --profile-container-bg: #212529;
+  --profile-card-bg: #2b3035;
+  --profile-heading-color: #f8f9fa;
+  --profile-label-color: #ced4da;
+  --profile-value-bg: #343a40;
+  --profile-value-border: #495057;
+  --profile-value-color: #f8f9fa;
+  --profile-divider: #495057;
+  --profile-avatar-bg: #343a40;
+  --profile-avatar-color: #adb5bd;
+  --profile-btn-border: #495057;
+  --profile-btn-color: #ced4da;
   --profile-btn-hover-border: #6c757d;
-  --profile-empty-icon-color: #3a3f55;
+  --profile-empty-icon-color: #495057;
 }
 
 .profile-page {
@@ -64,7 +62,6 @@
   background-color: var(--profile-card-bg);
   border-radius: 8px;
   padding: 28px 28px;
-  box-shadow: 0 2px 12px var(--profile-card-shadow);
   height: 100%;
 }
 

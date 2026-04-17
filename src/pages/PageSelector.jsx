@@ -6,7 +6,7 @@ import webshopimg from '../img/webshopicon.png'
 import logo from '../img/logo.png'
 
 export default function PageSelector() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
@@ -33,16 +33,58 @@ export default function PageSelector() {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <div className="px-2 bg-body text-body" style={{ minHeight: '100vh', position: 'relative' }}>
       <div className="position-absolute d-flex align-items-center gap-4" style={{ top: '1.25rem', right: '1.5rem' }}>
-        {!isAuthenticated && (
-          <Link className="btn btn-primary" to="/login?register=true">Regisztrálás</Link>
-        )}
-                              
+        
         <button className="btn p-0 border-0 bg-transparent nav-link" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
         </button>
+
+        {isAuthenticated ? (
+          <div className="dropdown">
+            <button
+              className="nav-link btn p-0 border-0 bg-transparent"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style={{ boxShadow: 'none' }}
+            >
+              <i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i>
+            </button>
+
+            <ul className="dropdown-menu dropdown-menu-end py-1" style={{ minWidth: '160px' }}>
+              <li>
+                <span className="dropdown-item-text py-1 small fw-semibold">
+                  {user?.name}
+                </span>
+              </li>
+              <li><hr className="dropdown-divider my-1" /></li>
+              <li>
+                <Link className="dropdown-item py-1 small" to="/profile">
+                  <i className="bi bi-person me-2"></i>Profil
+                </Link>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item py-1 small text-danger"
+                  onClick={handleLogout}
+                >
+                  <i className="bi bi-box-arrow-right me-2"></i>Kijelentkezés
+                </button>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="d-flex flex-row gap-2">
+            <Link className="btn btn-outline-secondary" to="/login">Bejelentkezés</Link>
+            <Link className="btn btn-primary" to="/login?register=true">Regisztrálás</Link>
+          </div>
+        )}
       </div>
       <div className="text-center pt-5 pb-2">
         <img src={logo} alt="Stringify" style={{ height: '10rem', width: 'auto' }} />
@@ -52,7 +94,7 @@ export default function PageSelector() {
         <div className='row row-cols-1 row-cols-md-2 g-4'>
           <div className='col'>
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
-              <a href="/store"><img className="icon-image rounded-3" src={webshopimg} alt="" /></a>
+              <Link to="/store"><img className="icon-image rounded-3" src={webshopimg} alt="" /></Link>
               <h4>Webshop</h4>
               <h6>Fedezd fel a webshop hangszerkínálatát, ahol széles választékban találhatsz gitárokat.</h6>
               <Link to="/store"><button style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button></Link>
@@ -60,7 +102,7 @@ export default function PageSelector() {
           </div>
           <div className='col'>
             <div className='bg-body-secondary p-4 rounded-4 h-100 page-selector-card'>
-              <a href="/guitar-builder"><img className="icon-image rounded-3" src={guitarbuilderimg} alt="" /></a>
+              <Link to="/guitar-builder"><img className="icon-image rounded-3" src={guitarbuilderimg} alt="" /></Link>
               <h4>Gitár építő</h4>
               <h6>Tervezd meg álomgitárodat a gitár építő oldalon: válassz formát, test és pickguard színt, és alkoss egyedi hangszert.</h6>
               <button onClick={handleGuitarBuilderClick} style={{fontFamily: 'Inter'}} className='btn btn-dark rounded-pill mt-2 px-4'>Tovább</button>

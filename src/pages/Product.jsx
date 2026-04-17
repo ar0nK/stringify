@@ -300,7 +300,7 @@ export default function Product() {
       {relatedProducts.length > 0 && (
         <div className='container-fluid px-0 mb-5'>
           <div className='container'>
-            <h3 className='mb-3'>Hasonló termékek</h3>
+            <h3 className='mb-3' style={{paddingBottom:"2rem"}}>Hasonló termékek</h3>
             <div className='d-none d-md-block position-relative'>
               <div id="desktopCarousel" className="carousel slide">
                 <div className="carousel-inner">
