@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ShoppingCart, Heart } from 'lucide-react';
 import Card from '../components/Card.jsx'
 import NavBar from '../components/NavBar.jsx'
 import Footer from '../components/Footer.jsx'
@@ -14,6 +15,7 @@ export default function SavedProducts() {
     loading: authLoading,
     setFavoritesCount,
     handleUnauthorized,
+    addToCart,
   } = useAuth();
 
   const navigate = useNavigate();
@@ -22,6 +24,12 @@ export default function SavedProducts() {
   const [favorites, setFavorites] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -106,6 +114,7 @@ export default function SavedProducts() {
             newFavorites.delete(productId);
             return newFavorites;
           });
+          showToast(`Termék eltávolítva a kedvencekből.`, 'info');
         }
       } else if (res.status === 401) {
         console.warn('[SavedProducts] toggleFavorite returned 401 — clearing auth and redirecting.');
@@ -118,6 +127,11 @@ export default function SavedProducts() {
     } catch (error) {
       console.error('[SavedProducts] Exception while toggling favorite:', error);
     }
+  };
+
+  const handleAddToCart = async (product) => {
+    await addToCart(product, 1);
+    showToast(`${product.title} hozzáadva a kosárhoz!`, 'success');
   };
 
   if (authLoading || loading) {
@@ -136,7 +150,16 @@ export default function SavedProducts() {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <NavBar/>
+      <NavBar />
+
+      {toast && (
+        <div className={`position-fixed bottom-0 end-0 m-4 alert ${toast.type === 'success' ? 'alert-success' : 'alert-secondary'} d-flex align-items-center gap-2 shadow`}
+          style={{ zIndex: 9999, minWidth: '260px' }}>
+          {toast.type === 'success' ? <ShoppingCart size={16} /> : <Heart size={16} fill="currentColor" />}
+          {toast.message}
+        </div>
+      )}
+
       <div className="container-fluid mt-4 px-lg-5 pb-5 flex-grow-1">
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
@@ -180,7 +203,7 @@ export default function SavedProducts() {
                       price={product.price}
                       isFavorite={favorites.has(product.id)}
                       onToggleFavorite={toggleFavorite}
-                      onAddToCart={() => console.log(`${product.title} added to cart`)}
+                      onAddToCart={() => handleAddToCart(product)}
                     />
                   </div>
                 ))}
@@ -189,7 +212,7 @@ export default function SavedProducts() {
           </section>
         </div>
       </div>
-    <Footer />
-  </div>
+      <Footer />
+    </div>
   )
 }
