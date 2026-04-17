@@ -122,9 +122,9 @@ export default function SavedProducts() {
 
   if (authLoading || loading) {
     return (
-      <div>
+      <div className="d-flex flex-column min-vh-100">
         <NavBar />
-        <div className="container mt-5 text-center">
+        <div className="container mt-5 text-center flex-grow-1">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Betöltés...</span>
           </div>
@@ -135,9 +135,9 @@ export default function SavedProducts() {
   }
 
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100">
       <NavBar/>
-      <div className="container-fluid mt-4 px-lg-5 pb-5">
+      <div className="container-fluid mt-4 px-lg-5 pb-5 flex-grow-1">
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
             <div className="d-none d-lg-block position-sticky" style={{ top: '20vh' }}>

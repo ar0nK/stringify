@@ -11,6 +11,7 @@ import SavedProducts from './pages/SavedProducts';
 import Cart from './pages/Cart';
 import LoginRegister from './pages/LoginRegister';
 import Delivery from './pages/Delivery';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -44,6 +45,14 @@ function App() {
               path="/saved-products" element={
                 <ProtectedRoute>
                   <SavedProducts />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

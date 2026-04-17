@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
 
   const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const GUEST_CART_KEY = 'cart_guest';
+  const LAST_BILLING_KEY = 'lastBillingAddress';
 
   const authHeaders = useCallback(() => {
     const token = localStorage.getItem('authToken');
@@ -353,6 +354,29 @@ export function AuthProvider({ children }) {
     setCartItems([]);
   }, [apiBase, fetchCartFromServer, handleUnauthorized, mergeCartItems]);
 
+  const updateUserProfile = useCallback((profileData) => {
+    setUser(prev => {
+      const previousUser = prev || {};
+      const firstName = profileData?.firstName?.trim() || '';
+      const lastName = profileData?.lastName?.trim() || '';
+      const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+
+      const nextUser = {
+        ...previousUser,
+        ...profileData,
+        name: fullName || previousUser.name || '',
+        email: profileData?.email ?? previousUser.email ?? '',
+      };
+
+      localStorage.setItem('user', JSON.stringify(nextUser));
+      return nextUser;
+    });
+  }, []);
+
+  const saveBillingAddress = useCallback((billingData) => {
+    localStorage.setItem(LAST_BILLING_KEY, JSON.stringify(billingData ?? {}));
+  }, []);
+
   const placeOrder = useCallback(async (deliveryData) => {
     const token = localStorage.getItem('authToken');
     if (!token) return { success: false, error: 'Kérjük, jelentkezz be!' };
@@ -377,6 +401,7 @@ export function AuthProvider({ children }) {
       }
 
       localStorage.removeItem(GUEST_CART_KEY);
+      localStorage.setItem(LAST_BILLING_KEY, JSON.stringify(deliveryData ?? {}));
       await refreshCart();
 
       const data = await res.json();
@@ -561,6 +586,8 @@ export function AuthProvider({ children }) {
     updateCartQuantity,
     removeFromCart,
     clearCart,
+    updateUserProfile,
+    saveBillingAddress,
     placeOrder,
   };
 

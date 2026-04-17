@@ -28,27 +28,53 @@ export default function NavBar() {
       <div className="position-fixed top-0 start-0 end-0" style={{ zIndex: 1030 }}>
         <nav className="navbar navbar-expand-lg bg-body">
           <div className="container-fluid">
-            <div style={{paddingLeft:'1rem', verticalAlign:'center'}}>
-              <a className="navbar-brand d-flex align-items-center gap-2" href="/">
+
+            <div style={{ paddingLeft: '1rem', verticalAlign: 'center' }}>
+              <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
                 <img src={logoimage} alt="" style={{ height: '5rem' }} />
-                <img src={logotext} alt="Stringify" style={{ height: '2.8rem'}} />
-              </a>
+                <img src={logotext} alt="Stringify" style={{ height: '2.8rem' }} />
+              </Link>
             </div>
-            <Link className="logo-nav-item" to="/store">
+
+            <Link className="logo-nav-item d-none d-lg-flex" to="/store">
               <img src={logoimage} alt="" />
               Webshop
             </Link>
-            <Link className="logo-nav-item" to="/guitar-builder">
+
+            <Link className="logo-nav-item d-none d-lg-flex" to="/guitar-builder">
               <img src={logoimage} alt="" />
               Gitár építő
             </Link>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNavDropdown"
+            >
               <span className="navbar-toggler-icon"></span>
             </button>
+
             <div className="collapse navbar-collapse" id="navbarNavDropdown">
+
+              <div className="d-lg-none d-flex flex-column gap-2 px-3 pb-2">
+                <Link className="logo-nav-item d-flex align-items-center gap-2" to="/store">
+                  <img src={logoimage} alt="" />
+                  Webshop
+                </Link>
+
+                <Link className="logo-nav-item d-flex align-items-center gap-2" to="/guitar-builder">
+                  <img src={logoimage} alt="" />
+                  Gitár építő
+                </Link>
+              </div>  
+
               {!isGuitarBuilder && <SearchBar theme={theme} />}
+
               <div className={`d-flex flex-row gap-5 align-items-center justify-content-center justify-content-lg-end me-lg-5 ${isGuitarBuilder ? 'ms-auto' : ''}`}>
+
                 <div className="d-flex flex-row gap-5 me-lg-4">
+
                   <Link className="nav-link position-relative" to="/saved-products">
                     <i className="bi bi-heart" style={{ fontSize: '1.5rem' }}></i>
                     {isAuthenticated && favoritesCount > 0 && (
@@ -67,23 +93,42 @@ export default function NavBar() {
                     )}
                   </Link>
 
-                  <button className="nav-link btn p-0 border-0 bg-transparent" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+                  <button
+                    className="nav-link btn p-0 border-0 bg-transparent"
+                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                  >
                     <i className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} style={{ fontSize: '1.5rem' }}></i>
                   </button>
                 </div>
 
                 {isAuthenticated ? (
                   <div className="dropdown">
-                    <button className="nav-link btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown" aria-expanded="false" style={{ boxShadow: 'none' }}>
+                    <button
+                      className="nav-link btn p-0 border-0 bg-transparent"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{ boxShadow: 'none' }}
+                    >
                       <i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i>
                     </button>
+
                     <ul className="dropdown-menu dropdown-menu-end py-1" style={{ minWidth: '160px' }}>
                       <li>
-                        <span className="dropdown-item-text py-1 small fw-semibold">{user?.name}</span>
+                        <span className="dropdown-item-text py-1 small fw-semibold">
+                          {user?.name}
+                        </span>
                       </li>
                       <li><hr className="dropdown-divider my-1" /></li>
                       <li>
-                        <button className="dropdown-item py-1 small text-danger" onClick={handleLogout}>
+                        <Link className="dropdown-item py-1 small" to="/profile">
+                          <i className="bi bi-person me-2"></i>Profil
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item py-1 small text-danger"
+                          onClick={handleLogout}
+                        >
                           <i className="bi bi-box-arrow-right me-2"></i>Kijelentkezés
                         </button>
                       </li>
