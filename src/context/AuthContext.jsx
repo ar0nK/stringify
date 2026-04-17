@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext, useCallback, useRef } from 'react';
+import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 
 const AuthContext = createContext();
 
@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  const initializingRef = useRef(false);
   const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   const GUEST_CART_KEY = 'cart_guest';
 
@@ -22,6 +21,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const handleUnauthorized = useCallback(() => {
+    console.warn('[Auth] Clearing auth state due to unauthorized response.');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     setUser(null);
@@ -62,7 +62,8 @@ export function AuthProvider({ children }) {
           quantity: Math.max(1, Number(i.quantity) || 1),
         };
       });
-    } catch {
+    } catch (e) {
+      console.error('[Cart] Failed to parse guest cart from localStorage:', e);
       return [];
     }
   }, []);
@@ -100,12 +101,13 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 401) {
-        if (!silent) {
-          console.warn('Cart request returned 401. Keeping local auth state and skipping cart sync.');
-        }
+        console.warn('[Cart] Fetching cart returned 401 — skipping cart sync, keeping local auth state.');
         return [];
       }
-      if (!res.ok) return [];
+      if (!res.ok) {
+        console.error(`[Cart] Failed to fetch cart: HTTP ${res.status}`);
+        return [];
+      }
       const data = await res.json();
       return (data.items || []).map(i => {
         const isCustom = i.type === 'custom' || i.customGuitarId != null || i.egyediGitarId != null;
@@ -126,7 +128,7 @@ export function AuthProvider({ children }) {
         };
       });
     } catch (error) {
-      console.error('Failed to fetch cart:', error);
+      console.error('[Cart] Exception while fetching cart from server:', error);
       return [];
     }
   }, [apiBase]);
@@ -139,18 +141,18 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 401) {
-        if (!silent) {
-          console.warn('Favorites request returned 401. Keeping local auth state and clearing favorite count.');
-        }
+        console.warn('[Favorites] Fetching favorites returned 401 — clearing count, keeping local auth state.');
         setFavoritesCount(0);
         return;
       }
       if (res.ok) {
         const data = await res.json();
         setFavoritesCount(data.length);
+      } else {
+        console.error(`[Favorites] Failed to fetch favorites count: HTTP ${res.status}`);
       }
     } catch (e) {
-      console.error('Failed to fetch favorites count:', e);
+      console.error('[Favorites] Exception while fetching favorites count:', e);
     }
   }, [apiBase]);
 
@@ -176,7 +178,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ egyediGitarId: customId, quantity })
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] addToCart (custom) returned 401.'); handleUnauthorized(); return; }
 
       const itemKey = `custom-${customId}`;
       const local = loadGuestCart();
@@ -210,7 +212,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ termekId: productId, quantity })
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] addToCart (product) returned 401.'); handleUnauthorized(); return; }
       const serverItems = await fetchCartFromServer();
       setCartItems(mergeCartItems(serverItems));
       return;
@@ -255,7 +257,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ egyediGitarId: customId, quantity: qty })
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] updateCartQuantity (custom) returned 401.'); handleUnauthorized(); return; }
 
       const local = loadGuestCart();
       const nextLocal = local
@@ -275,7 +277,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ termekId: pid, quantity: qty })
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] updateCartQuantity (product) returned 401.'); handleUnauthorized(); return; }
       const serverItems = await fetchCartFromServer();
       setCartItems(mergeCartItems(serverItems));
       return;
@@ -301,7 +303,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ egyediGitarId: customId, quantity: 0 })
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] removeFromCart (custom) returned 401.'); handleUnauthorized(); return; }
 
       const local = loadGuestCart();
       const nextLocal = local.filter(i => i.itemKey !== itemKey);
@@ -318,7 +320,7 @@ export function AuthProvider({ children }) {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] removeFromCart (product) returned 401.'); handleUnauthorized(); return; }
       const serverItems = await fetchCartFromServer();
       setCartItems(mergeCartItems(serverItems));
       return;
@@ -340,7 +342,7 @@ export function AuthProvider({ children }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
-      if (res.status === 401) { handleUnauthorized(); return; }
+      if (res.status === 401) { console.warn('[Cart] clearCart returned 401.'); handleUnauthorized(); return; }
       localStorage.removeItem(GUEST_CART_KEY);
       const serverItems = await fetchCartFromServer();
       setCartItems(mergeCartItems(serverItems));
@@ -363,12 +365,14 @@ export function AuthProvider({ children }) {
       });
 
       if (res.status === 401) {
+        console.warn('[Order] placeOrder returned 401 — logging out.');
         handleUnauthorized();
         return { success: false, error: 'Kérjük, jelentkezz be!' };
       }
 
       if (!res.ok) {
         const errorText = await res.text();
+        console.error(`[Order] placeOrder failed: HTTP ${res.status}`, errorText);
         return { success: false, error: errorText || 'Nem sikerült a rendelés' };
       }
 
@@ -378,7 +382,7 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       return { success: true, orderId: data.orderId, total: data.total };
     } catch (error) {
-      console.error('Order error:', error);
+      console.error('[Order] Exception during placeOrder:', error);
       return { success: false, error: 'Nem sikerült csatlakozni a szerverhez' };
     }
   }, [apiBase, authHeaders, handleUnauthorized, refreshCart]);
@@ -386,13 +390,11 @@ export function AuthProvider({ children }) {
   const cartCount = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
 
   useEffect(() => {
-    // Guard against React StrictMode double-invocation
-    if (initializingRef.current) return;
-    initializingRef.current = true;
-
     let cancelled = false;
 
     const init = async () => {
+      console.log('[Auth] Initializing auth state...');
+
       const token = localStorage.getItem('authToken');
       const storedUser = localStorage.getItem('user');
 
@@ -405,7 +407,7 @@ export function AuthProvider({ children }) {
             setIsAuthenticated(true);
           }
         } catch (error) {
-          console.error('Failed to parse stored user:', error);
+          console.error('[Auth] Failed to parse stored user from localStorage — clearing auth state:', error);
           handleUnauthorized();
         }
       }
@@ -416,15 +418,21 @@ export function AuthProvider({ children }) {
         await fetchFavoritesCount({ silent: true });
         await refreshCart({ silent: true });
       } else {
+        console.log('[Auth] No stored session found — loading guest cart.');
         setCartItems(loadGuestCart());
       }
 
-      if (!cancelled) setLoading(false);
+      if (!cancelled) {
+        console.log('[Auth] Initialization complete.');
+        setLoading(false);
+      }
     };
 
     init();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [fetchFavoritesCount, handleUnauthorized, loadGuestCart, refreshCart]);
 
   const login = async (email, password) => {
@@ -436,6 +444,7 @@ export function AuthProvider({ children }) {
 
       if (!saltResponse.ok) {
         const errorText = await saltResponse.text();
+        console.error('[Auth] Failed to fetch salt:', errorText);
         return { success: false, error: errorText || 'Felhasználó nem található' };
       }
 
@@ -450,6 +459,7 @@ export function AuthProvider({ children }) {
 
       if (!loginResponse.ok) {
         const errorText = await loginResponse.text();
+        console.error('[Auth] Login failed:', errorText);
         return { success: false, error: errorText || 'Hibás email vagy jelszó' };
       }
 
@@ -461,6 +471,7 @@ export function AuthProvider({ children }) {
       const permission = data.permission ?? data.Permission;
 
       if (!token) {
+        console.error('[Auth] Login response did not include a token:', data);
         return { success: false, error: 'Érvénytelen szerver válasz' };
       }
 
@@ -473,18 +484,18 @@ export function AuthProvider({ children }) {
       try {
         await fetchFavoritesCount({ silent: true });
       } catch (e) {
-        console.warn('Could not load favorites after login:', e);
+        console.warn('[Auth] Could not load favorites after login:', e);
       }
 
       try {
         await refreshCart({ silent: true });
       } catch (e) {
-        console.warn('Could not load cart after login:', e);
+        console.warn('[Auth] Could not load cart after login:', e);
       }
 
       return { success: true, name };
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('[Auth] Exception during login:', error);
       return { success: false, error: 'Nem sikerült csatlakozni a szerverhez' };
     }
   };
@@ -499,13 +510,14 @@ export function AuthProvider({ children }) {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('[Auth] Registration failed:', errorText);
         return { success: false, error: errorText || 'Regisztráció sikertelen' };
       }
 
       const message = await response.text();
       return { success: true, message };
     } catch (error) {
-      console.error('Register error:', error);
+      console.error('[Auth] Exception during registration:', error);
       return { success: false, error: 'Nem sikerült csatlakozni a szerverhez' };
     }
   };
@@ -521,7 +533,7 @@ export function AuthProvider({ children }) {
           body: JSON.stringify({ token })
         });
       } catch (error) {
-        console.error('Logout error:', error);
+        console.error('[Auth] Exception during logout request (continuing anyway):', error);
       }
     }
 
@@ -538,6 +550,7 @@ export function AuthProvider({ children }) {
     logout,
     apiBase,
     authHeaders,
+    handleUnauthorized,
     favoritesCount,
     setFavoritesCount,
     fetchFavoritesCount,

@@ -7,7 +7,7 @@ export default function Footer() {
       <footer className="bg-body py-4">
         <div className="container-fluid px-4 px-lg-5 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
           <span className="text-body-secondary small">
-            © 2025–2026 Stringify. Minden jog fenntartva.
+            © 2025-2026 Stringify. Minden jog fenntartva.
           </span>
 
           <div className="d-flex gap-3">

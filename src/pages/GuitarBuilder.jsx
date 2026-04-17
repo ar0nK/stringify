@@ -8,12 +8,12 @@ import { useAuth } from "../context/AuthContext";
 import "../style/GuitarBuilder.css";
 
 export default function GuitarBuilder() {
-  const { apiBase } = useAuth();
 
+  const { apiBase, loading: authLoading } = useAuth();
   const canvasRef = useRef(null);
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
+  const [error, setError] = useState(null);
 
   const [selectedTestforma,  setSelectedTestforma]  = useState(null);
   const [selectedFinish,     setSelectedFinish]     = useState(null);
@@ -21,29 +21,44 @@ export default function GuitarBuilder() {
   const [selectedNeck,       setSelectedNeck]       = useState(null);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    let cancelled = false;
+
+    console.log('[GuitarBuilder] Fetching builder options...');
+
     fetch(`${apiBase}/api/egyedigitar/options`)
       .then(res => {
-        if (!res.ok) throw new Error("Nem sikerült betölteni az opciókat.");
+        if (!res.ok) {
+          console.error(`[GuitarBuilder] Failed to load options: HTTP ${res.status}`);
+          throw new Error("Nem sikerült betölteni az opciókat.");
+        }
         return res.json();
       })
       .then(data => {
+        if (cancelled) return;
+        console.log('[GuitarBuilder] Options loaded successfully.');
         setOptions(data);
         setLoading(false);
       })
       .catch(err => {
+        if (cancelled) return;
+        console.error('[GuitarBuilder] Exception while loading options:', err);
         setError(err.message);
         setLoading(false);
       });
-  }, [apiBase]);
+
+    return () => { cancelled = true; };
+  }, [apiBase, authLoading]);
 
   const handleTestformaChange = (testforma) => {
     setSelectedTestforma(testforma);
-    
+
     if (testforma && options) {
       const defaultFinish = options.finishek.find(f => f.testFormaId === testforma.id);
       const defaultPickguard = options.pickguardok.find(p => p.testFormaId === testforma.id);
       const defaultNeck = options.nyakak[0];
-      
+
       setSelectedFinish(defaultFinish || null);
       setSelectedPickguard(defaultPickguard || null);
       setSelectedNeck(defaultNeck || null);
@@ -60,7 +75,7 @@ export default function GuitarBuilder() {
 
       <div className="container-fluid builder-container">
 
-        {loading && (
+        {(authLoading || loading) && (
           <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "60vh" }}>
             <div className="spinner-border text-danger" role="status" />
           </div>
@@ -70,7 +85,7 @@ export default function GuitarBuilder() {
           <div className="alert alert-danger m-4">{error}</div>
         )}
 
-        {!loading && !error && options && (
+        {!authLoading && !loading && !error && options && (
           <div className="row gx-4">
 
             <div className="col-lg-3 col-md-4">

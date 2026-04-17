@@ -40,7 +40,7 @@ export default function NavBar() {
             </Link>
             <Link className="logo-nav-item" to="/guitar-builder">
               <img src={logoimage} alt="" />
-              Guitár építő
+              Gitár építő
             </Link>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>

@@ -7,7 +7,15 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function SavedProducts() {
-  const { apiBase, authHeaders, isAuthenticated, loading: authLoading, setFavoritesCount } = useAuth();
+  const {
+    apiBase,
+    authHeaders,
+    isAuthenticated,
+    loading: authLoading,
+    setFavoritesCount,
+    handleUnauthorized,
+  } = useAuth();
+
   const navigate = useNavigate();
   const [savedProducts, setSavedProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -17,6 +25,7 @@ export default function SavedProducts() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
+      console.warn('[SavedProducts] User is not authenticated — redirecting to login.');
       navigate('/login', { state: { from: { pathname: '/saved-products' } } });
       return;
     }
@@ -30,6 +39,8 @@ export default function SavedProducts() {
         setLoading(true);
         setError("");
 
+        console.log('[SavedProducts] Fetching saved products...');
+
         const res = await fetch(`${apiBase}/api/KedvencTermek/products`, {
           method: "GET",
           headers: authHeaders(),
@@ -37,19 +48,20 @@ export default function SavedProducts() {
 
         if (!res.ok) {
           if (res.status === 401) {
+            console.warn('[SavedProducts] Received 401 — clearing auth state and redirecting to login.');
             if (!cancelled) {
-              setSavedProducts([]);
-              setFilteredProducts([]);
-              setFavorites(new Set());
-              setFavoritesCount(0);
-              setError('A kedvencek most nem elérhetők. Kérlek jelentkezz be újra, ha ez továbbra is fennáll.');
+              handleUnauthorized();
+              navigate('/login', { state: { from: { pathname: '/saved-products' } } });
             }
             return;
           }
+
+          console.error(`[SavedProducts] Failed to fetch saved products: HTTP ${res.status}`);
           throw new Error('Nem sikerült betölteni a kedvenc termékeket');
         }
 
         const data = await res.json();
+        console.log(`[SavedProducts] Loaded ${data.length} saved product(s).`);
 
         if (!cancelled) {
           setSavedProducts(data);
@@ -58,7 +70,7 @@ export default function SavedProducts() {
           setFavoritesCount(data.length);
         }
       } catch (e) {
-        console.error(e);
+        console.error('[SavedProducts] Exception while fetching saved products:', e);
         if (!cancelled) setError("Nem sikerült betölteni a kedvenc termékeket.");
       } finally {
         if (!cancelled) setLoading(false);
@@ -66,7 +78,7 @@ export default function SavedProducts() {
     })();
 
     return () => (cancelled = true);
-  }, [apiBase, authHeaders, isAuthenticated, authLoading, navigate, setFavoritesCount]);
+  }, [apiBase, authHeaders, isAuthenticated, authLoading, navigate, setFavoritesCount, handleUnauthorized]);
 
   const handleFiltersChange = (filtered) => {
     setFilteredProducts(filtered);
@@ -96,13 +108,15 @@ export default function SavedProducts() {
           });
         }
       } else if (res.status === 401) {
-        setError('A kedvencek módosítása most nem sikerült. Kérlek próbáld újra.');
+        console.warn('[SavedProducts] toggleFavorite returned 401 — clearing auth and redirecting.');
+        handleUnauthorized();
+        navigate('/login', { state: { from: { pathname: '/saved-products' } } });
       } else {
         const errorData = await res.text();
-        console.error("Toggle favorite failed:", errorData);
+        console.error('[SavedProducts] toggleFavorite failed:', res.status, errorData);
       }
     } catch (error) {
-      console.error("Error toggling favorite:", error);
+      console.error('[SavedProducts] Exception while toggling favorite:', error);
     }
   };
 

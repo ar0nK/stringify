@@ -7,6 +7,7 @@ import './index.css';
 import './style/PageSelector.css';
 import './style/NavBar.css'
 import './style/LoginRegister.css'
+import './style/Footer.css'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
