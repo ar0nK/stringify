@@ -79,7 +79,7 @@ export default function SearchBar({ theme }) {
         <input 
           className={`form-control ps-5 rounded ${ theme === "dark" && location.pathname !== "/" ? "bg-dark text-light border-secondary" : "bg-light" }`} 
           type="search" 
-          placeholder="Search" 
+          placeholder="Keresés" 
           aria-label="Search"
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}

@@ -272,7 +272,14 @@ export default function Product() {
             )}
             <button
               className='btn btn-link p-0 text-secondary text-decoration-underline mb-3'
-              onClick={() => longDescriptionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              onClick={() => {
+                const element = longDescriptionRef.current;
+                if (element) {
+                  const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offset = 120;
+                  window.scrollTo({ top: elementTop - offset, behavior: 'smooth' });
+                }
+              }}
             >
               Bővebb leírás
             </button>
@@ -293,63 +300,63 @@ export default function Product() {
       {relatedProducts.length > 0 && (
         <div className='container-fluid px-0 mb-5'>
           <div className='container'>
-            <h3 className='mb-4'>Hasonló termékek</h3>
-          </div>
-          <div className='container d-none d-md-block position-relative'>
-            <div id="desktopCarousel" className="carousel slide">
-              <div className="carousel-inner">
-                {desktopSlides.map((slideProducts, index) => (
-                  <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                    <div className="row g-4">
-                      {slideProducts.map((guitar) => (
-                        <div key={guitar.id} className="col-md-4">
-                          <Card
-                            id={guitar.id}
-                            images={guitar.images}
-                            title={guitar.title}
-                            rating={guitar.rating}
-                            reviewCount={guitar.reviewCount}
-                            previewDescription={guitar.previewDescription}
-                            isAvailable={guitar.isAvailable}
-                            price={guitar.price}
-                            isFavorite={favorites.has(guitar.id)}
-                            onToggleFavorite={toggleRelatedFavorite}
-                            onAddToCart={() => handleAddRelatedToCart(guitar)}
-                          />
-                        </div>
-                      ))}
+            <h3 className='mb-3'>Hasonló termékek</h3>
+            <div className='d-none d-md-block position-relative'>
+              <div id="desktopCarousel" className="carousel slide">
+                <div className="carousel-inner">
+                  {desktopSlides.map((slideProducts, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                      <div className="row g-4">
+                        {slideProducts.map((guitar) => (
+                          <div key={guitar.id} className="col-md-4">
+                            <Card
+                              id={guitar.id}
+                              images={guitar.images}
+                              title={guitar.title}
+                              rating={guitar.rating}
+                              reviewCount={guitar.reviewCount}
+                              previewDescription={guitar.previewDescription}
+                              isAvailable={guitar.isAvailable}
+                              price={guitar.price}
+                              isFavorite={favorites.has(guitar.id)}
+                              onToggleFavorite={toggleRelatedFavorite}
+                              onAddToCart={() => handleAddRelatedToCart(guitar)}
+                            />
+                          </div>
+                        ))}
+                      </div>
                     </div>
+                  ))}
+                </div>
+                <button className="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev">
+                  <ChevronLeft size={40} className="text-dark" />
+                </button>
+                <button className="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next">
+                  <ChevronRight size={40} className="text-dark" />
+                </button>
+              </div>
+            </div>
+            <div className='d-md-none overflow-auto'>
+              <div className="d-flex gap-3 pb-3">
+                {relatedProducts.slice(0, 6).map((guitar) => (
+                  <div key={guitar.id} className="mobile-product-card">
+                    <Card
+                      {...guitar}
+                      isFavorite={favorites.has(guitar.id)}
+                      onToggleFavorite={toggleRelatedFavorite}
+                    />
                   </div>
                 ))}
               </div>
-              <button className="carousel-control-prev" type="button" data-bs-target="#desktopCarousel" data-bs-slide="prev">
-                <ChevronLeft size={40} className="text-dark" />
-              </button>
-              <button className="carousel-control-next" type="button" data-bs-target="#desktopCarousel" data-bs-slide="next">
-                <ChevronRight size={40} className="text-dark" />
-              </button>
-            </div>
-          </div>
-          <div className='container d-md-none overflow-auto'>
-            <div className="d-flex gap-3 pb-3">
-              {relatedProducts.slice(0, 6).map((guitar) => (
-                <div key={guitar.id} className="mobile-product-card">
-                  <Card
-                    {...guitar}
-                    isFavorite={favorites.has(guitar.id)}
-                    onToggleFavorite={toggleRelatedFavorite}
-                  />
-                </div>
-              ))}
             </div>
           </div>
         </div>
       )}
-
+ 
       {product.longDescription && (
-        <div className="container mb-5" ref={longDescriptionRef} style={{ textAlign: 'left' }}>
+        <div className="container mb-3" style={{ textAlign: 'left' }}>
           <hr />
-          <h4 className="mb-3">Részletes leírás</h4>
+          <h4 className="mb-3" ref={longDescriptionRef}>Részletes leírás</h4>
           <p className="text-secondary" style={{ whiteSpace: 'pre-line', lineHeight: '1.8', textAlign: 'left' }}>
             {product.longDescription}
           </p>

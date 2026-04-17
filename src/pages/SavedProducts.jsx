@@ -137,7 +137,7 @@ export default function SavedProducts() {
   return (
     <div>
       <NavBar/>
-      <div className="container-fluid mt-4 px-lg-5">
+      <div className="container-fluid mt-4 px-lg-5 pb-5">
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
             <div className="d-none d-lg-block position-sticky" style={{ top: '20vh' }}>
@@ -150,7 +150,7 @@ export default function SavedProducts() {
             </div>
           </aside>
           <section className="col-12 col-lg-10 ps-lg-5">
-            <h2 className="mb-4">Kedvenc Termékek</h2>
+            <h2 className="mb-4 mt-4">Kedvenc Termékek</h2>
 
             {error && <div className="alert alert-danger">{error}</div>}
 

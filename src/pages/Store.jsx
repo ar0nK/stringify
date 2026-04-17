@@ -130,7 +130,7 @@ export default function Store() {
         </div>
       )}
 
-      <div className="container-fluid mt-4 px-lg-5">
+      <div className="container-fluid mt-4 px-lg-5 pb-5">
         <div className="row">
           <aside className="col-12 col-lg-2 mb-4 pe-lg-5">
             <div className="d-none d-lg-block position-sticky" style={{ top: "calc(100px + 1rem)", width: "100%" }}>
