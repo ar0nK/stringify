@@ -22,15 +22,19 @@ export default function LoginRegister() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const previousTheme = document.documentElement.getAttribute("data-bs-theme");
-    document.documentElement.setAttribute("data-bs-theme", "light");
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
 
-    return () => {
-      if (previousTheme) {
-        document.documentElement.setAttribute("data-bs-theme", previousTheme);
-      }
+  useEffect(() => {
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === "theme") setTheme(e.newValue || "light");
     };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   async function handleSubmit(e) {
@@ -86,7 +90,18 @@ export default function LoginRegister() {
   }
 
   return (
-    <div className="login-register-container min-vh-100 d-flex align-items-center justify-content-center">
+    <div className="login-register-container min-vh-100 d-flex align-items-center justify-content-center position-relative">
+      <button
+        className="btn position-absolute top-0 end-0 m-4 p-2 border-0 bg-transparent"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        style={{ zIndex: 10 }}
+      >
+        <i 
+          className={`bi ${theme === "light" ? "bi-moon" : "bi-sun"}`} 
+          style={{ fontSize: '1.5rem' }}
+        ></i>
+      </button>
+
       <div className="login-register-card card border-0 rounded-3" style={{ width: "35rem" }}>
         <div className="card-body p-4">
           <a href="/"><img src={logo} style={{ height: "8rem", marginBottom: "1rem" }} alt="" /></a>
